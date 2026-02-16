@@ -54,6 +54,13 @@ cp .env.example .env
 # Edit .env and fill in OPENAI_API_KEY and TAVILY_API_KEY
 ```
 
+Once you have a dataset (can use the dataset in `./dataset/` for testing or generate your own as in [Benchmark Usage](#-benchmark-usage)), run the full pipeline—report generation and evaluation—with:
+
+```bash
+./scripts/run_all.sh
+```
+Generation results are written to `./outputs/results/` and evaluation results to `./outputs/evaluation/`.
+
 ### 📊 Benchmark Usage
 You can start scraping your own datasets and running our holistic, automated evaluation suite using the commands below. For more details and a full introduction, please continue to our **[Dataset Scripts Description](data_pipeline/README.md)** and/or our **[Evaluation library Description](eval/README.md)**.
 
@@ -119,7 +126,7 @@ asyncio.run(main())
 
 ## 🔌 MCP Integration
 
-DeepScholar-Base can be used as an [MCP (Model Context Protocol)](https://spec.modelcontextprotocol.io/) server, letting you call it from Cursor, Claude Desktop, or any MCP-compatible client. See [scripts/mcp/README.md](scripts/mcp/README.md) for full setup, Cursor config, and usage.
+DeepScholar-Base can be used as an [MCP (Model Context Protocol)](https://spec.modelcontextprotocol.io/) server, letting you call it from Cursor, Claude Desktop, or any MCP-compatible client. See [scripts/mcp/README.md](scripts/mcp/README.md) for full setup.
 
 ```bash
 # Start the MCP server (from project root)
