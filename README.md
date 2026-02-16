@@ -54,39 +54,6 @@ cp .env.example .env
 # Edit .env and fill in OPENAI_API_KEY and TAVILY_API_KEY
 ```
 
-### 🔄 Complete Pipeline
-
-`scripts/run_all.sh` orchestrates data collection → report generation → evaluation end-to-end:
-
-```bash
-# Full pipeline for CS papers from Jan 2025
-./scripts/run_all.sh --field cs --start-date 2025-01-01 --output-base runs/cs_jan2025
-
-# Single paper
-./scripts/run_all.sh --paper-id 2502.07374 --output-base runs/single_paper
-
-# Skip collection, evaluate existing results only
-./scripts/run_all.sh --skip-data-pipeline --skip-deepscholar --output-base runs/cs_jan2025
-```
-
-Output structure:
-
-```
-{output-base}/
-├── dataset/                         # Collected papers
-│   ├── papers_with_related_works.csv
-│   └── queries.csv
-├── results/                         # Generated reports (one folder per query)
-│   ├── 0/
-│   │   ├── final_report.md
-│   │   ├── papers.csv
-│   │   └── stats.json
-│   └── summary.json
-├── evaluation/
-│   └── results.csv
-└── pipeline_config.txt
-```
-
 ### 📊 Benchmark Usage
 You can start scraping your own datasets and running our holistic, automated evaluation suite using the commands below. For more details and a full introduction, please continue to our **[Dataset Scripts Description](data_pipeline/README.md)** and/or our **[Evaluation library Description](eval/README.md)**.
 
