@@ -1,0 +1,5 @@
+# Temporary compatibility override for current upstream pins:
+# - massgen>=0.1.52 -> opencv-python>=4.12 -> numpy>=2
+# - lotus-ai[arxiv] -> numpy<2
+# Keep OpenCV on the last NumPy<2-compatible release until pins converge upstream.
+opencv-python<4.12

@@ -2,6 +2,8 @@ import asyncio
 from enum import Enum
 from typing import Callable, Coroutine, Any
 from datetime import datetime
+import importlib
+import inspect
 from agents import function_tool, RunContextWrapper, RunConfig
 from openai.types.responses import ResponseInputItemParam
 from agents.models.chatcmpl_converter import Converter
@@ -38,6 +40,10 @@ except ImportError:
 
 arxiv_logger = logging.getLogger("arxiv")
 arxiv_logger.setLevel(logging.WARNING)
+
+# arXiv identifiers date fields are YYYYMMDDHHMM and arXiv launched in 1991.
+# Using 00000000 as lower bound now intermittently triggers HTTP 500 from export.arxiv.org.
+ARXIV_MIN_SUBMITTED_DATE = datetime(1991, 1, 1, 0, 0)
 
 @dataclass
 class AgentContext:
@@ -109,27 +115,77 @@ async def _handle_one_search_query(
     query: str,
 ) -> tuple[str, str | None]:
     successful_query = None
-    try:
-        web_search_df = web_search(
-            corpus=search_type.to_web_search_corpus(),
-            query=query,
-            K=ctx.context.configs.per_query_max_search_results_count,
-            end_date=cutoff,
-        )
-        query_results, df = _normalize_search_df(
-            web_search_df,
-            query,
-            rename_map=search_type.to_rename_map(),
-            results_fmt_func=lambda row: f"{row.get('title', 'Untitled')} ({row.get('date', '')}): {row.get('url', '')}",
-            empty_result="No results found.",
-        )
-        ctx.context.merge_papers_df(df)
-        successful_query = query
-    except Exception as e:
-        ctx.context.configs.logger.error(f"Error searching {search_type.value} for query {query}: {e}")
-        query_results = f"Error searching {search_type.value} for query {query}: {e}"
+    max_attempts = max(1, int(getattr(ctx.context.configs, "max_search_retries", 1)))
+    query_results = ""
+
+    for attempt in range(1, max_attempts + 1):
+        try:
+            search_kwargs = {
+                "corpus": search_type.to_web_search_corpus(),
+                "query": query,
+                "K": ctx.context.configs.per_query_max_search_results_count,
+                "end_date": cutoff,
+            }
+            if search_type == ToolTypes.ARXIV and cutoff is not None:
+                # Force a valid lower bound to avoid Lotus/arXiv end-date-only query path
+                # that emits submittedDate:[00000000 TO ...] and can 500.
+                search_kwargs["start_date"] = ARXIV_MIN_SUBMITTED_DATE
+            web_search_df = web_search(
+                **search_kwargs,
+            )
+            query_results, df = _normalize_search_df(
+                web_search_df,
+                query,
+                rename_map=search_type.to_rename_map(),
+                results_fmt_func=lambda row: f"{row.get('title', 'Untitled')} ({row.get('date', '')}): {row.get('url', '')}",
+                empty_result="No results found.",
+            )
+            ctx.context.merge_papers_df(df)
+            successful_query = query
+            break
+        except Exception as e:
+            err_text = str(e)
+            is_retryable = _is_retryable_search_error(search_type, err_text)
+            if is_retryable and attempt < max_attempts:
+                sleep_seconds = min(4.0, float(2 ** (attempt - 1)))
+                ctx.context.configs.logger.warning(
+                    f"Retrying {search_type.value} query {query!r} after transient error "
+                    f"(attempt {attempt}/{max_attempts}): {err_text}",
+                )
+                await asyncio.sleep(sleep_seconds)
+                continue
+
+            ctx.context.configs.logger.error(
+                f"Error searching {search_type.value} for query {query}: {e}",
+            )
+            query_results = f"Error searching {search_type.value} for query {query}: {e}"
+            break
+
     query_section = f"=== QUERY {i}: {query} ===\n{query_results}"
     return query_section, successful_query
+
+
+def _is_retryable_search_error(search_type: ToolTypes, error_text: str) -> bool:
+    """Return True for transient upstream errors worth retrying."""
+    if search_type != ToolTypes.ARXIV:
+        return False
+    text = (error_text or "").lower()
+    retry_markers = (
+        "http 500",
+        "status code 500",
+        "internal server error",
+        "service unavailable",
+        "bad gateway",
+        "gateway timeout",
+        "timed out",
+        "timeout",
+        "connection reset",
+        "connection aborted",
+        "temporarily unavailable",
+        "http 429",
+        "too many requests",
+    )
+    return any(marker in text for marker in retry_markers)
 
 
 async def _search(
@@ -150,7 +206,10 @@ async def _search(
         for _, successful_query in all_results_sections
         if successful_query is not None
     ]
-    ctx.context.configs.logger.info(f"Successful queries: {successful_queries}, collected total references: {len(ctx.context.papers_df)}")
+    ref_count = len(ctx.context.papers_df) if ctx.context.papers_df is not None else 0
+    ctx.context.configs.logger.info(
+        f"Successful queries: {successful_queries}, collected total references: {ref_count}"
+    )
     all_results = [query_section for query_section, _ in all_results_sections]
     ctx.context.queries.append(successful_queries)
     return "\n\n".join(all_results)
@@ -257,7 +316,10 @@ async def _read_content(
             successful_inputs.extend(input)
     except Exception as e:
         answer = f"Error extracting content from {tool_type.value} for {input}: {e}"
-    ctx.context.configs.logger.info(f"Successful inputs: {successful_inputs}, collected total references: {len(ctx.context.papers_df)}")
+    ref_count = len(ctx.context.papers_df) if ctx.context.papers_df is not None else 0
+    ctx.context.configs.logger.info(
+        f"Successful inputs: {successful_inputs}, collected total references: {ref_count}"
+    )
     ctx.context.queries.append(successful_inputs)
     return answer
 
@@ -347,6 +409,157 @@ def _call_model_input_filter(input: CallModelData[AgentContext]) -> ModelInputDa
     configs.logger.debug(f"Final input: {final_input}")
     return ModelInputData(instructions=instructions, input=final_input)
 
+
+def _normalize_tool_names(raw: Any, field_name: str) -> set[str]:
+    if raw is None:
+        return set()
+    if isinstance(raw, str):
+        return {raw}
+    if isinstance(raw, list):
+        return {str(item) for item in raw if item}
+    raise ValueError(f"{field_name} must be a string or list of strings.")
+
+
+def _build_tool_filter(
+    global_allowed_tools: set[str],
+    global_exclude_tools: set[str],
+    server_config: dict[str, Any],
+) -> Callable[[Any], bool] | None:
+    server_allowed_tools = _normalize_tool_names(
+        server_config.get("allowed_tools"),
+        "mcp_servers[].allowed_tools",
+    )
+    server_exclude_tools = _normalize_tool_names(
+        server_config.get("exclude_tools"),
+        "mcp_servers[].exclude_tools",
+    )
+
+    if global_allowed_tools and server_allowed_tools:
+        allowed_tools = global_allowed_tools.intersection(server_allowed_tools)
+    elif global_allowed_tools:
+        allowed_tools = set(global_allowed_tools)
+    else:
+        allowed_tools = set(server_allowed_tools)
+
+    exclude_tools = set(global_exclude_tools).union(server_exclude_tools)
+    if not allowed_tools and not exclude_tools:
+        return None
+
+    def _tool_filter(tool: Any) -> bool:
+        tool_name = str(getattr(tool, "name", ""))
+        if allowed_tools and tool_name not in allowed_tools:
+            return False
+        if tool_name in exclude_tools:
+            return False
+        return True
+
+    return _tool_filter
+
+
+def _resolve_mcp_server_classes() -> tuple[type[Any], type[Any], type[Any] | None]:
+    try:
+        mcp_module = importlib.import_module("agents.mcp")
+    except Exception as e:
+        raise ImportError(
+            "MCP server support requires openai-agents with MCP enabled. "
+            "Please install a compatible openai-agents version and `mcp`."
+        ) from e
+
+    stdio_cls = getattr(mcp_module, "MCPServerStdio", None)
+    sse_cls = getattr(mcp_module, "MCPServerSse", None)
+    streamable_http_cls = getattr(mcp_module, "MCPServerStreamableHttp", None)
+    if stdio_cls is None or sse_cls is None:
+        raise ImportError(
+            "Installed openai-agents package does not expose MCP server classes "
+            "(MCPServerStdio, MCPServerSse). Please upgrade openai-agents."
+        )
+    return stdio_cls, sse_cls, streamable_http_cls
+
+
+def _build_mcp_server(configs: Configs, server_config: dict[str, Any]) -> Any:
+    stdio_cls, sse_cls, streamable_http_cls = _resolve_mcp_server_classes()
+    transport = str(server_config.get("transport", server_config.get("type", "stdio"))).lower().replace("_", "-")
+    global_allowed_tools = _normalize_tool_names(configs.allowed_tools, "allowed_tools")
+    global_exclude_tools = _normalize_tool_names(configs.exclude_tools, "exclude_tools")
+    tool_filter = _build_tool_filter(global_allowed_tools, global_exclude_tools, server_config)
+
+    common_kwargs: dict[str, Any] = {}
+    for key in ("name", "cache_tools_list", "max_retry_attempts", "client_session_timeout_seconds"):
+        if key in server_config and server_config[key] is not None:
+            common_kwargs[key] = server_config[key]
+    if tool_filter is not None:
+        common_kwargs["tool_filter"] = tool_filter
+
+    if transport == "stdio":
+        command = server_config.get("command")
+        if not command:
+            raise ValueError("mcp_servers stdio entries require `command`.")
+        params = {"command": command}
+        for key in ("args", "cwd", "env"):
+            if key in server_config and server_config[key] is not None:
+                params[key] = server_config[key]
+        return stdio_cls(params=params, **common_kwargs)
+
+    if transport == "sse":
+        url = server_config.get("url")
+        if not url:
+            raise ValueError("mcp_servers sse entries require `url`.")
+        params = {"url": url}
+        if "headers" in server_config and server_config["headers"] is not None:
+            params["headers"] = server_config["headers"]
+        return sse_cls(params=params, **common_kwargs)
+
+    if transport == "streamable-http":
+        if streamable_http_cls is None:
+            raise ImportError(
+                "Your openai-agents version does not support streamable-http MCP servers. "
+                "Please upgrade openai-agents."
+            )
+        url = server_config.get("url")
+        if not url:
+            raise ValueError("mcp_servers streamable-http entries require `url`.")
+        params = {"url": url}
+        if "headers" in server_config and server_config["headers"] is not None:
+            params["headers"] = server_config["headers"]
+        return streamable_http_cls(params=params, **common_kwargs)
+
+    raise ValueError(f"Unsupported MCP transport: {transport!r}")
+
+
+def _agent_supports_mcp_servers() -> bool:
+    try:
+        return "mcp_servers" in inspect.signature(Agent.__init__).parameters
+    except Exception:
+        return False
+
+
+async def _connect_mcp_servers(configs: Configs) -> list[Any]:
+    connected_servers: list[Any] = []
+    try:
+        for i, server_config in enumerate(configs.mcp_servers):
+            server = _build_mcp_server(configs, server_config)
+            await server.connect()
+            connected_servers.append(server)
+            server_name = server_config.get("name") or f"mcp_server_{i+1}"
+            configs.logger.info(f"Connected MCP server: {server_name}")
+        return connected_servers
+    except Exception:
+        for server in reversed(connected_servers):
+            try:
+                await server.cleanup()
+            except Exception:
+                pass
+        raise
+
+
+async def _cleanup_mcp_servers(configs: Configs, mcp_servers: list[Any]) -> None:
+    for server in reversed(mcp_servers):
+        try:
+            await server.cleanup()
+        except Exception as e:
+            configs.logger.warning(f"Failed to cleanup MCP server: {e}")
+
+
 async def agentic_search(
     configs: Configs,
     topic: str,
@@ -374,20 +587,39 @@ async def agentic_search(
             if not end_date
             else openai_sdk_search_system_prompt
         )
-    agent = Agent(
-        name="Research Assistant",
-        instructions=prompt,
-        tools=tools,
-        model=model,
-        model_settings=model_configs,
-    )
-    result = await Runner.run(
-        agent,
-        input=topic,
-        context=context,
-        max_turns=100,
-        run_config=RunConfig(call_model_input_filter=_call_model_input_filter),
-    )
+    mcp_servers: list[Any] = []
+    if configs.mcp_servers:
+        if not _agent_supports_mcp_servers():
+            raise RuntimeError(
+                "Configured MCP servers, but this openai-agents version does not support "
+                "`Agent(..., mcp_servers=[...])`. Please upgrade openai-agents."
+            )
+        mcp_servers = await _connect_mcp_servers(configs)
+        configs.logger.info(f"Enabled {len(mcp_servers)} MCP server(s) for agentic search.")
+
+    agent_kwargs: dict[str, Any] = {
+        "name": "Research Assistant",
+        "instructions": prompt,
+        "tools": tools,
+        "model": model,
+        "model_settings": model_configs,
+    }
+    if mcp_servers:
+        agent_kwargs["mcp_servers"] = mcp_servers
+    agent = Agent(**agent_kwargs)
+
+    try:
+        result = await Runner.run(
+            agent,
+            input=topic,
+            context=context,
+            max_turns=100,
+            run_config=RunConfig(call_model_input_filter=_call_model_input_filter),
+        )
+    finally:
+        if mcp_servers:
+            await _cleanup_mcp_servers(configs, mcp_servers)
+
     docs_df = (
         result.context_wrapper.context.papers_df
         if result.context_wrapper.context.papers_df is not None
@@ -463,4 +695,3 @@ def _is_responses_model(configs: Configs, model: str) -> bool:
             except ValueError:
                 return False
         return False
-

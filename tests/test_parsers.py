@@ -7,6 +7,7 @@ from unittest.mock import patch, MagicMock
 from eval.parsers import (
     SearchAIParser,
     DeepScholarBaseParser,
+    MassGenParser,
     StormParser,
     OpenScholarParser,
     DeepResearcherParser,
@@ -64,6 +65,8 @@ class TestDeepScholarBaseParsers(TestParserBase):
         assert parser.folder_path == deepscholar_base_folder_path
         assert parser.config == deepscholar_base_config
         assert parser.file_id == "0"
+        assert parser.citations_for_cite_quality is not None
+        assert len(parser.citations_for_cite_quality) == len(parser.docs or [])
 
     def test_deepscholar_base_parser_file_paths(
         self, deepscholar_base_folder_path, deepscholar_base_config
@@ -111,6 +114,35 @@ class TestDeepScholarBaseParsers(TestParserBase):
                 first_ref = next(iter(reference_map.values()))
                 assert "title" in first_ref
                 assert "abstract" in first_ref
+
+
+class TestMassGenParser(TestParserBase):
+    """Test cases for MassGen parser."""
+
+    @pytest.fixture
+    def massgen_folder_path(self):
+        return "tests/baselines_results/deepscholar_base_gpt_4.1/0"
+
+    @pytest.fixture
+    def massgen_config(self):
+        return {
+            "mode": ParserType.MASSGEN,
+            "file_id": "0",
+            "dataset": pd.read_csv("dataset/related_works_combined.csv"),
+        }
+
+    def test_massgen_parser_initialization(self, massgen_folder_path, massgen_config):
+        """Test MassGenParser initialization."""
+        parser = MassGenParser(massgen_folder_path, massgen_config)
+        assert parser.parser_type == ParserType.MASSGEN
+        assert parser.folder_path == massgen_folder_path
+        assert parser.config == massgen_config
+        assert parser.file_id == "0"
+
+    def test_massgen_parser_file_paths(self, massgen_folder_path, massgen_config):
+        """Test that MassGen parser uses the DeepScholar output format."""
+        parser = MassGenParser(massgen_folder_path, massgen_config)
+        assert parser._get_file_path() == f"{massgen_folder_path}/intro.md"
 
 
 class TestDeepResearcherParser(TestParserBase):
@@ -315,6 +347,22 @@ class TestParserIntegration:
             assert isinstance(parser.raw_generated_text, str)
 
             # Check that reference map was created
+            assert hasattr(parser, "docs")
+            assert isinstance(parser.docs, list)
+
+    def test_massgen_parser_with_real_data(self):
+        """Test MassGen parser with actual baseline result files."""
+        folder_path = "tests/baselines_results/deepscholar_base_gpt_4.1/0"
+        config = {
+            "mode": ParserType.MASSGEN,
+            "file_id": "0",
+            "dataset": pd.read_csv("dataset/related_works_combined.csv"),
+        }
+
+        if os.path.exists(folder_path):
+            parser = MassGenParser(folder_path, config)
+            assert parser.raw_generated_text is not None
+            assert isinstance(parser.raw_generated_text, str)
             assert hasattr(parser, "docs")
             assert isinstance(parser.docs, list)
 

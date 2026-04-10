@@ -80,7 +80,7 @@ python -m deepscholar_base.main \
 # Step 2: Automated Evaluation
 if [ "$SKIP_EVAL" = false ]; then
   python -m eval.main \
-    --modes deepscholar_base \
+    --modes massgen \
     --evals all \
     --input-folder "$RESULTS_DIR" \
     --output-folder "$EVAL_DIR" \

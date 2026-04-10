@@ -41,25 +41,69 @@ To get started, make sure you are using Python 3.10, simply clone the repository
 
 ```bash
 # Clone the repository
-git clone git@github.com:guestrin-lab/deepscholar-bench.git
-cd deepscholar-bench
+git clone https://github.com/ncrispino/deepscholar-massgen.git
+cd deepscholar-massgen
 
-# Install dependencies
-conda create -n dsbench python=3.10 -y
-conda activate dsbench
-pip install -r requirements.txt
+# Install dependencies with uv (recommended)
+uv venv
+source .venv/bin/activate
+uv pip install -r requirements.txt --overrides requirements-overrides.txt
+uv pip install -r scripts/mcp/requirements.txt  # if using MCP tools
 
 # Set up API keys
 cp .env.example .env
-# Edit .env and fill in OPENAI_API_KEY and TAVILY_API_KEY
+# Edit .env and fill in OPENAI_API_KEY, TAVILY_API_KEY, OPENROUTER_API_KEY, etc.
 ```
 
-Once you have a dataset (can use the dataset in `./dataset/` for testing or generate your own as in [Benchmark Usage](#-benchmark-usage)), run the full pipeline—report generation and evaluation—with:
+Once you have a dataset (can use the dataset in `./dataset/` for testing or generate your own as in [Benchmark Usage](#-benchmark-usage)), you can first test MassGen with
+```bash
+./scripts/run_massgen.sh --tui --instances 1
+```
+
+Then, run the full pipeline—report generation and evaluation—with:
 
 ```bash
-./scripts/run_all.sh
+./scripts/run_massgen.sh
 ```
 Generation results are written to `./outputs/results/` and evaluation results to `./outputs/evaluation/`.
+
+`./scripts/run_all.sh` remains available as a compatibility entrypoint.
+
+Useful options:
+
+```bash
+# For TUI example run.
+./scripts/run_massgen.sh --dry-run --tui --instances 1
+
+# Preview commands and query shards without running anything
+./scripts/run_massgen.sh --engine massgen --dry-run --instances 4
+
+# Run MassGen generation with 4 parallel workers, then run eval
+./scripts/run_massgen.sh --engine massgen --instances 4
+
+# Use a custom MassGen config (including MCP servers/tools)
+./scripts/run_massgen.sh --engine massgen --massgen-config /path/to/massgen_config.yaml --instances 2
+
+# Compatibility mode: use legacy DeepScholar-Base generation
+./scripts/run_massgen.sh --engine deepscholar --instances 4
+
+# Run generation only
+./scripts/run_massgen.sh --engine massgen --instances 4 --skip-eval
+
+# Launch MassGen interactive TUI with a custom prompt (debug mode)
+./scripts/run_massgen.sh --tui --prompt "Debug this prompt in interactive mode"
+
+# Launch TUI using query row 0 from dataset/queries.csv (or synthesize from papers csv in dry-run)
+./scripts/run_massgen.sh --tui --query-idx 0
+
+# Disable automatic export of TUI logs to eval-ready outputs/results/<file_id>
+./scripts/run_massgen.sh --tui --query-idx 0 --no-tui-export
+```
+
+The default engine is `massgen`, which runs `python -m massgen_runner.main` and calls `massgen.run(...)` directly.
+In `--tui` mode, the script runs `massgen --config ... "<prompt>"` and forces `--skip-eval`. If `--instances > 1`, TUI sessions run sequentially.
+After each TUI session, `run_massgen.sh` now automatically converts the generated `.massgen/massgen_logs/log_*` run into eval-compatible files under `outputs/results/<file_id>/` (including `intro.md`, `paper.csv`, `stats.json`) so you can run `python -m eval.main` later without rerunning generation.
+For eval parsing, `eval/parsers/massgen.py` reads `intro.md` (same convention as DeepScholar-Base).
 
 ### 📊 Benchmark Usage
 You can start scraping your own datasets and running our holistic, automated evaluation suite using the commands below. For more details and a full introduction, please continue to our **[Dataset Scripts Description](data_pipeline/README.md)** and/or our **[Evaluation library Description](eval/README.md)**.
@@ -79,22 +123,95 @@ python -m data_pipeline.main --field cs --field bio --start-date 2025-01-01
 
 #### 2. Evaluate Research Generation Systems
 
-```bash
-# Evaluate deepscholar_base outputs with gpt-4o as judge
-python -m eval.main \
-    --modes deepscholar_base \
-    --evals organization nugget_coverage reference_coverage cite_p \
-    --input-folder tests/baselines_results/deepscholar_base_gpt_4.1 \
-    --output-folder results \
-    --dataset-path dataset/related_works_combined.csv \
-    --model-name gpt-4o
+##### 2A. TUI Run → Evaluate → Compare With Provided Baselines
 
-# Compare multiple systems
+Use this path when you want to debug one query interactively, then score it against dataset ground truth and baseline examples in `tests/baselines_results/`.
+
+```bash
+# 1) Run a single interactive TUI session on dataset row 0
+./scripts/run_massgen.sh --tui --query-idx 0 --instances 1
+
+# TUI note:
+# - this skips automatic eval
+# - it now auto-exports eval-ready files to outputs/results/0/
+#   (intro.md, final_report.md, paper.csv, stats.json)
+
+# 2) Evaluate only this one result (file_id 0)
 python -m eval.main \
-    --modes deepscholar_base openscholar \
-    --input-folder results/deepscholar/ results/openscholar/ \
-    --output-folder eval/ \
-    --evals all
+  --modes massgen \
+  --evals all \
+  --input-folder outputs/results \
+  --file-id 0 \
+  --output-folder outputs/evaluation_tui_0 \
+  --dataset-path dataset/papers_with_related_works.csv \
+  --important-citations-path dataset/important_citations.csv \
+  --nugget-groundtruth-dir-path dataset/gt_nuggets_outputs \
+  --config-yaml configs/eval.yaml
+
+# 3) Compare the same file_id against the packaged DeepScholar-base example
+python -m eval.main \
+  --modes massgen deepscholar_base \
+  --evals all \
+  --input-folder outputs/results tests/baselines_results/deepscholar-base \
+  --file-id 0 \
+  --output-folder outputs/evaluation_tui_vs_deepscholar_base_0 \
+  --dataset-path dataset/papers_with_related_works.csv \
+  --important-citations-path dataset/important_citations.csv \
+  --nugget-groundtruth-dir-path dataset/gt_nuggets_outputs \
+  --config-yaml configs/eval.yaml
+```
+
+`file_id` alignment note: in TUI mode, exported outputs are keyed by `--query-idx` (for example, `--query-idx 0` writes `outputs/results/0/`). For apples-to-apples comparison against `tests/baselines_results/*`, use the same `--file-id` in eval commands.
+
+You can also compare against multiple provided baselines (same `file_id`):
+```bash
+python -m eval.main \
+  --modes massgen deepscholar_base openscholar deepresearcher storm SearchAI \
+  --evals all \
+  --input-folder \
+    outputs/results \
+    tests/baselines_results/deepscholar-base \
+    tests/baselines_results/openscholar \
+    tests/baselines_results/deepresearcher \
+    tests/baselines_results/storm \
+    tests/baselines_results/search_ai_gpt_4.1 \
+  --file-id 0 \
+  --output-folder outputs/evaluation_tui_vs_all_baselines_0 \
+  --dataset-path dataset/papers_with_related_works.csv \
+  --important-citations-path dataset/important_citations.csv \
+  --nugget-groundtruth-dir-path dataset/gt_nuggets_outputs \
+  --config-yaml configs/eval.yaml
+```
+
+##### 2B. Headless Automatic Runs (More Queries / More Workers)
+
+Use this path for non-interactive generation and automatic eval over many queries.
+
+```bash
+# Full automatic pipeline: generate + eval
+./scripts/run_massgen.sh --engine massgen --instances 4
+
+# Generation only (skip eval), useful when planning a combined comparison later
+./scripts/run_massgen.sh --engine massgen --instances 4 --skip-eval
+
+# Example: generate MassGen + DeepScholar-base separately, then compare together
+RESULTS_DIR=./outputs/results_massgen \
+SKIP_EVAL=true \
+./scripts/run_massgen.sh --engine massgen --instances 1 --massgen-config configs/massgen.config.yaml
+
+RESULTS_DIR=./outputs/results_deepscholar_base \
+SKIP_EVAL=true \
+./scripts/run_massgen.sh --engine deepscholar --instances 1
+
+python -m eval.main \
+  --modes massgen deepscholar_base \
+  --evals all \
+  --input-folder ./outputs/results_massgen ./outputs/results_deepscholar_base \
+  --output-folder ./outputs/evaluation_compare \
+  --dataset-path ./dataset/papers_with_related_works.csv \
+  --important-citations-path ./dataset/important_citations.csv \
+  --nugget-groundtruth-dir-path ./dataset/gt_nuggets_outputs \
+  --config-yaml configs/eval.yaml
 ```
 
 
@@ -126,11 +243,39 @@ asyncio.run(main())
 
 ## 🔌 MCP Integration
 
-DeepScholar-Base can be used as an [MCP (Model Context Protocol)](https://spec.modelcontextprotocol.io/) server, letting you call it from Cursor, Claude Desktop, or any MCP-compatible client. See [scripts/mcp/README.md](scripts/mcp/README.md) for full setup.
+MassGen consumes MCP tools when they are configured in a MassGen config file and passed to the runner via `--massgen-config`.
+
+```yaml
+agents:
+  - id: "agent_a"
+    backend:
+      type: "openai"
+      model: "gpt-5-mini"
+      mcp_servers:
+        weather:
+          type: "stdio"
+          command: "npx"
+          args: ["-y", "@modelcontextprotocol/server-weather"]
+    allowed_tools:
+      - "mcp__weather__get_current_weather"
+    exclude_tools: []
+```
+
+Then run:
+
+```bash
+./scripts/run_massgen.sh --engine massgen --massgen-config /path/to/massgen_config.yaml
+```
+
+DeepScholar-Base can also be exposed as an [MCP (Model Context Protocol)](https://spec.modelcontextprotocol.io/) server for external clients (separate from MassGen runtime tool use). See [scripts/mcp/README.md](scripts/mcp/README.md) for full setup.
 
 ```bash
 # Start the MCP server (from project root)
 python scripts/mcp/server.py
+
+# Search/read tools only (no full pipeline), with mode control:
+# --tool-mode both|arxiv|web
+python scripts/mcp/agentic_tools_server.py --tool-mode both
 ```
 
 ## 🤝 Contributing

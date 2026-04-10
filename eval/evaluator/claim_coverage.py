@@ -24,6 +24,12 @@ class ClaimCoverageEvaluator(Evaluator):
 
     def _calculate(self, parser: Parser, window_size: int) -> pd.DataFrame:
         sentences = custom_sent_tokenize(parser.clean_text)
+        docs = parser.docs or []
+        cite_quality_docs = parser.citations_for_cite_quality or []
+        max_citable_idx = min(len(docs), len(cite_quality_docs)) - 1
+        if max_citable_idx < 0:
+            return 0.0
+
         supports = []
         for sid, sent in enumerate(sentences):
             stripped_sent = _remove_citations(sent)
@@ -38,10 +44,10 @@ class ClaimCoverageEvaluator(Evaluator):
                 refs = [int(x[1:]) - 1 for x in re.findall(r"\[\d+", sent)]
                 sentence_docs = []
                 for ref in refs:
-                    if ref > len(parser.docs) - 1 or ref < 0:
+                    if ref > max_citable_idx or ref < 0:
                         continue
                     sentence_docs.append(
-                        _format_document(parser.citations_for_cite_quality[ref])
+                        _format_document(cite_quality_docs[ref])
                     )
                 all_window_docs.extend(sentence_docs)
                 if sentence_docs:
@@ -55,7 +61,9 @@ class ClaimCoverageEvaluator(Evaluator):
                         break
             supports.append(1 if support else 0)
 
-        return np.mean(supports)
+        if not supports:
+            return 0.0
+        return float(np.mean(supports))
 
     def calculate(
         self, parsers: list[Parser], window_size: int | None = None
@@ -72,7 +80,9 @@ class ClaimCoverageEvaluator(Evaluator):
 
 
 def custom_sent_tokenize(text):
-    protected_text = text
+    if text is None:
+        return []
+    protected_text = str(text)
     protected_text = re.sub(r"\bet al\.", "ET_AL_PLACEHOLDER", protected_text)
     sentences = sent_tokenize(protected_text)
     sentences = [s.replace("ET_AL_PLACEHOLDER", "et al.") for s in sentences]

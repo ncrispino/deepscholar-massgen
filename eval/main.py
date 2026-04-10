@@ -3,6 +3,7 @@ import os
 import pandas as pd
 import argparse
 import logging
+from pathlib import Path
 from tabulate import tabulate  # type: ignore
 import lotus
 from lotus.models import LM
@@ -19,6 +20,79 @@ logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
+
+_NLTK_SENTENCE_TOKENIZER_EVALS = {"cite_p", "claim_coverage"}
+
+
+def _nltk_data_dir() -> Path:
+    env_nltk_data = os.environ.get("NLTK_DATA", "").strip()
+    if env_nltk_data:
+        return Path(env_nltk_data).expanduser()
+
+    virtual_env = os.environ.get("VIRTUAL_ENV", "").strip()
+    if virtual_env:
+        return Path(virtual_env) / "nltk_data"
+
+    return Path.cwd() / ".nltk_data"
+
+
+def _ensure_nltk_sentence_tokenizers(args: argparse.Namespace) -> None:
+    selected_evals = {str(eval_fn.value) for eval_fn in args.evals}
+    if not selected_evals.intersection(_NLTK_SENTENCE_TOKENIZER_EVALS):
+        return
+
+    try:
+        import nltk
+        from nltk import data as nltk_data
+    except Exception as e:
+        raise RuntimeError(
+            "NLTK is required for cite_p/claim_coverage evals. "
+            "Install requirements and retry."
+        ) from e
+
+    download_dir = _nltk_data_dir()
+    download_dir.mkdir(parents=True, exist_ok=True)
+    download_dir_str = str(download_dir)
+    os.environ["NLTK_DATA"] = download_dir_str
+
+    if download_dir_str not in nltk_data.path:
+        nltk_data.path.insert(0, download_dir_str)
+
+    required_resources = (
+        ("punkt_tab", "tokenizers/punkt_tab/english/"),
+        ("punkt", "tokenizers/punkt"),
+    )
+
+    for resource_name, resource_path in required_resources:
+        try:
+            nltk_data.find(resource_path)
+            continue
+        except LookupError:
+            logger.info(
+                "Downloading NLTK resource '%s' into %s ...",
+                resource_name,
+                download_dir_str,
+            )
+
+        downloaded = nltk.download(
+            resource_name,
+            download_dir=download_dir_str,
+            quiet=True,
+        )
+        if not downloaded:
+            raise RuntimeError(
+                f"Failed to download NLTK resource '{resource_name}' "
+                f"to {download_dir_str}. "
+                "Try running: python -m nltk.downloader punkt_tab punkt"
+            )
+
+        try:
+            nltk_data.find(resource_path)
+        except LookupError as e:
+            raise RuntimeError(
+                f"NLTK resource '{resource_name}' still not found after download. "
+                f"Searched path includes: {nltk_data.path}"
+            ) from e
 
 
 def process_mode(
@@ -90,6 +164,8 @@ def pretty_print_results(results: pd.DataFrame) -> None:
 def main() -> None:
     """Main function to run the citation statistics evaluation"""
     args = parse_args()
+    _ensure_nltk_sentence_tokenizers(args)
+
     lotus.settings.configure(
         lm=LM(
             model=args.model_name,

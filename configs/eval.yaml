@@ -4,7 +4,7 @@
 
 # Systems to evaluate
 modes:
-  - deepscholar_base
+  - massgen
 
 # Metrics to run ('all' expands to every available metric)
 evals:

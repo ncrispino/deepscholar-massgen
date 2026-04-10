@@ -31,6 +31,40 @@ class Parser(ABC):
 
         self._load_dataset()
         self._load_file()
+        self._ensure_core_fields()
+        self._ensure_citations_for_cite_quality()
+
+    def _ensure_core_fields(self) -> None:
+        """Normalize core parser outputs to safe defaults for evaluators."""
+        if self.raw_generated_text is None:
+            self.raw_generated_text = ""
+        elif not isinstance(self.raw_generated_text, str):
+            self.raw_generated_text = str(self.raw_generated_text)
+
+        if self.clean_text is None:
+            self.clean_text = self.raw_generated_text
+        elif not isinstance(self.clean_text, str):
+            self.clean_text = str(self.clean_text)
+
+        if self.docs is None:
+            self.docs = []
+
+    def _ensure_citations_for_cite_quality(self) -> None:
+        """
+        Ensure cite-quality evaluators always have a tuple-based citation view.
+
+        Some parsers only populate `docs` (list[{"title","sent"}]) and not
+        `citations_for_cite_quality`. `cite_p` expects tuple entries, so we
+        provide a consistent fallback here.
+        """
+        if self.citations_for_cite_quality is not None:
+            return
+
+        docs = self.docs or []
+        self.citations_for_cite_quality = [
+            (str(doc.get("title", "")), str(doc.get("sent", "")))
+            for doc in docs
+        ]
 
     def _load_dataset(self):
         if "s_map_groundtruth" in self.config:

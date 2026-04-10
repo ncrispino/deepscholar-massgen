@@ -1,6 +1,7 @@
 from pathlib import Path
 from pydantic import BaseModel, model_validator
 import logging
+import json
 from lotus.models import LM
 from pydantic import Field
 from lotus import WebSearchCorpus
@@ -8,6 +9,75 @@ from lotus.types import ReasoningStrategy
 from typing import Any
 
 logger = logging.getLogger("deepscholar_base")
+
+
+def _normalize_mcp_servers(raw_servers: Any) -> list[dict[str, Any]]:
+    """Normalize MCP server configs into a list of dict entries."""
+    if raw_servers is None:
+        return []
+    if isinstance(raw_servers, list):
+        out: list[dict[str, Any]] = []
+        for idx, server in enumerate(raw_servers):
+            if not isinstance(server, dict):
+                raise ValueError(f"mcp_servers[{idx}] must be a mapping (dict).")
+            out.append(_normalize_single_mcp_server(server))
+        return out
+    if isinstance(raw_servers, dict):
+        # Accept quickstart-style shape:
+        # { "server_name": { "command": "...", ... }, ... }
+        out = []
+        for name, server in raw_servers.items():
+            if not isinstance(server, dict):
+                raise ValueError(f"mcp_servers[{name!r}] must be a mapping (dict).")
+            out.append(_normalize_single_mcp_server({"name": name, **server}))
+        return out
+    raise ValueError("mcp_servers must be a list or dict.")
+
+
+def _normalize_single_mcp_server(server: dict[str, Any]) -> dict[str, Any]:
+    normalized = dict(server)
+
+    transport = normalized.get("transport", normalized.get("type"))
+    if isinstance(transport, str) and transport.strip():
+        transport_normalized = transport.strip().lower().replace("_", "-")
+    elif normalized.get("command"):
+        transport_normalized = "stdio"
+    elif normalized.get("url"):
+        url = str(normalized.get("url", "")).rstrip("/")
+        transport_normalized = "sse" if url.endswith("/sse") else "streamable-http"
+    else:
+        raise ValueError(
+            "Each MCP server must include either `transport` or connection fields "
+            "(`command` for stdio, `url` for sse/http)."
+        )
+
+    valid_transports = {"stdio", "sse", "streamable-http"}
+    if transport_normalized not in valid_transports:
+        raise ValueError(
+            f"Invalid MCP transport {transport!r}. Expected one of: {sorted(valid_transports)}."
+        )
+    normalized["transport"] = transport_normalized
+    return normalized
+
+
+def _load_mcp_servers_from_path(path: str | Path) -> list[dict[str, Any]]:
+    cfg_path = Path(path).expanduser()
+    if not cfg_path.exists():
+        raise FileNotFoundError(f"MCP config file not found: {cfg_path}")
+    with open(cfg_path) as f:
+        data = json.load(f)
+    if not isinstance(data, dict):
+        raise ValueError(f"MCP config at {cfg_path} must be a JSON object.")
+
+    # Preferred shape matches popular MCP quickstart configs:
+    # { "mcpServers": { "name": { ... } } }
+    if "mcpServers" in data:
+        return _normalize_mcp_servers(data["mcpServers"])
+    if "mcp_servers" in data:
+        return _normalize_mcp_servers(data["mcp_servers"])
+    # Fallback: treat top-level mapping as server map.
+    return _normalize_mcp_servers(data)
+
 
 class Configs(BaseModel):
     class Config:
@@ -24,6 +94,12 @@ class Configs(BaseModel):
 
     # Only for agentic search
     use_responses_model: bool | None = None
+    # External MCP tools consumed by the agentic search runtime.
+    # Supports either inline YAML (mcp_servers) or quickstart JSON (mcp_config_path).
+    mcp_servers: list[dict[str, Any]] = Field(default_factory=list)
+    mcp_config_path: str | None = None
+    allowed_tools: list[str] = Field(default_factory=list)
+    exclude_tools: list[str] = Field(default_factory=list)
 
     # Only for recursive search
     num_search_steps: int = 3
@@ -75,6 +151,19 @@ class Configs(BaseModel):
             value["web_corpuses"] = out
         else:
             value["web_corpuses"] = [WebSearchCorpus.TAVILY]
+        return value
+
+    @model_validator(mode="before")
+    def resolve_mcp_servers(value: dict[str, Any]):
+        if not isinstance(value, dict):
+            return value
+        raw_servers = value.get("mcp_servers")
+        normalized_servers = _normalize_mcp_servers(raw_servers)
+
+        config_path = value.get("mcp_config_path")
+        if config_path:
+            normalized_servers.extend(_load_mcp_servers_from_path(config_path))
+        value["mcp_servers"] = normalized_servers
         return value
 
     @model_validator(mode="before")
@@ -142,6 +231,11 @@ class Configs(BaseModel):
           search_mode: agentic
           enable_web_search: true
           web_corpuses: [TAVILY, ARXIV]
+          mcp_servers:
+            - name: weather
+              type: stdio
+              command: npx
+              args: ["-y", "@modelcontextprotocol/server-weather"]
         """
         try:
             import yaml
@@ -154,6 +248,12 @@ class Configs(BaseModel):
             data = yaml.safe_load(f) or {}
         if not isinstance(data, dict):
             raise ValueError("YAML config must be a mapping (dict).")
+
+        mcp_config_path = data.get("mcp_config_path")
+        if isinstance(mcp_config_path, str) and mcp_config_path:
+            mcp_path = Path(mcp_config_path)
+            if not mcp_path.is_absolute():
+                data["mcp_config_path"] = str((path.parent / mcp_path).resolve())
         
         if data.get("search_mode") == "agentic":
             data["use_agentic_search"] = True

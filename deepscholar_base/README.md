@@ -66,6 +66,7 @@ An autonomous AI agent with tools that iteratively searches and reads papers unt
          │  Tools:                                  │
          │   • search_arxiv()    • search_web()     │
          │   • read_abstracts()  • read_webpages()  │
+         │   • optional MCP tools (configured)      │
          └────────────────┬─────────────────────────┘
                           │
          ┌────── Agent: decides what to search ─────┐
@@ -113,6 +114,23 @@ Both modes support an optional `end_date` parameter that filters results to only
 | `web_corpuses` | `[TAVILY]` | Web search providers for recursive search |
 | **(Only for agentic search)** | | |
 | `use_responses_model` | `None` | Force OpenAI Responses vs Chat Completions API |
+| `mcp_config_path` | `None` | Path to quickstart JSON with `mcpServers` definitions |
+| `mcp_servers` | `[]` | Inline MCP server configs (`type`/`command`/`args` or `type`/`url`) |
+| `allowed_tools` | `[]` | Optional MCP tool allowlist (applies across configured MCP servers) |
+| `exclude_tools` | `[]` | Optional MCP tool denylist (applies across configured MCP servers) |
+
+Example MCP configuration:
+
+```yaml
+mcp_servers:
+  - name: weather
+    type: stdio
+    command: npx
+    args: ["-y", "@modelcontextprotocol/server-weather"]
+  - name: local_search
+    type: streamable-http
+    url: http://localhost:8080/mcp
+```
 
 ### Filter Settings
 

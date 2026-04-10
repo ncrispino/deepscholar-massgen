@@ -1,0 +1,178 @@
+agents:
+- id: agent_a
+  system_message: |
+    Always save the final related-works content to a file named `intro.md` in the current workspace.
+  backend:
+    type: openrouter
+    model: minimax/minimax-m2.7
+    # qwen/qwen3.5-35b-a3b:alibaba
+    # type: gemini
+    # model: gemini-3-flash-preview
+    # type: groq
+    # model: openai/gpt-oss-120b
+    # reasoning_effort: high  # medium
+    # model: gemini-3.1-pro-preview
+    # type: openrouter
+    # model: z-ai/glm-5
+    # model: qwen/qwen3.5-397b-a17b
+    # model: minimax/minimax-m2.5
+    # type: claude_code
+    # model: claude-sonnet-4-5
+    # model: claude-opus-4-6
+    # type: codex
+    # model: gpt-5.3-codex-spark
+    # # model: gpt-5.3-codex
+    # reasoning:
+    #   # effort: xhigh
+    #   effort: medium
+    #   summary: auto
+    cwd: workspace
+    enable_code_based_tools: false  # want to use the mcp provided directly instead of needing to discover
+    exclude_file_operation_mcps: true
+    enable_mcp_command_line: true
+    mcp_servers:
+    - name: deepscholar_agentic
+      type: stdio
+      command: python
+      args:
+      - scripts/mcp/agentic_tools_server.py
+      - --tool-mode
+      - arxiv # switch to arxiv or web to restrict tool family
+    command_line_execution_mode: docker
+    # command_line_docker_image: ghcr.io/massgen/mcp-runtime-sudo:latest
+    command_line_docker_image: massgen/mcp-runtime-sudo:latest
+    command_line_docker_network_mode: none  # block internet so mcp is used # bridge
+    command_line_docker_enable_sudo: true
+    command_line_docker_credentials:
+      env_file: .env
+      env_vars_from_file:
+      - OPENAI_API_KEY
+      - ANTHROPIC_API_KEY
+      - GOOGLE_API_KEY
+      - GEMINI_API_KEY
+    shared_tools_directory: shared_tools
+    auto_discover_custom_tools: true
+    exclude_custom_tools:
+    - _computer_use
+    - _claude_computer_use
+    - _gemini_computer_use
+    - _browser_automation
+# - id: agent_b
+#   backend:
+#     # type: openrouter
+#     # model: minimax/minimax-m2.5
+#     # type: claude_code
+#     # model: claude-sonnet-4-5
+#     # model: claude-opus-4-6
+#     type: gemini
+#     model: gemini-3-flash-preview
+#     cwd: workspace
+#     enable_code_based_tools: true
+#     exclude_file_operation_mcps: true
+#     enable_mcp_command_line: true
+#     command_line_execution_mode: docker
+#     command_line_docker_image: ghcr.io/massgen/mcp-runtime-sudo:latest
+#     command_line_docker_network_mode: bridge
+#     command_line_docker_enable_sudo: true
+#     command_line_docker_credentials:
+#       env_file: .env
+#       env_vars_from_file:
+#       - OPENAI_API_KEY
+#       - ANTHROPIC_API_KEY
+#       - GOOGLE_API_KEY
+#       - GEMINI_API_KEY
+#     shared_tools_directory: shared_tools
+#     auto_discover_custom_tools: true
+#     exclude_custom_tools:
+#     - _computer_use
+#     - _claude_computer_use
+#     - _gemini_computer_use
+#     - _browser_automation
+# - id: agent_c
+#   backend:
+#     type: gemini
+#     model: gemini-3-flash-preview
+#     cwd: workspace
+#     enable_code_based_tools: true
+#     exclude_file_operation_mcps: true
+#     enable_mcp_command_line: true
+#     command_line_execution_mode: docker
+#     command_line_docker_image: ghcr.io/massgen/mcp-runtime-sudo:latest
+#     command_line_docker_network_mode: bridge
+#     command_line_docker_enable_sudo: true
+#     command_line_docker_credentials:
+#       env_file: .env
+#       env_vars_from_file:
+#       - OPENAI_API_KEY
+#       - ANTHROPIC_API_KEY
+#       - GOOGLE_API_KEY
+#       - GEMINI_API_KEY
+#     shared_tools_directory: shared_tools
+#     auto_discover_custom_tools: true
+#     exclude_custom_tools:
+#     - _computer_use
+#     - _claude_computer_use
+#     - _gemini_computer_use
+#     - _browser_automation
+orchestrator:
+  snapshot_storage: snapshots
+  agent_temporary_workspace: temp_workspaces
+  max_new_answers_per_agent: 1
+  fairness_enabled: true
+  fairness_lead_cap_answers: 2
+  max_midstream_injections_per_round: 2
+  enable_multimodal_tools: true
+  image_generation_backend: openai
+  video_generation_backend: openai
+  audio_generation_backend: openai
+  voting_sensitivity: checklist_gated
+  voting_threshold: 2
+  skip_voting: true
+  coordination:
+    # evaluation_criteria_generator:
+    #   enabled: true
+    pre_collab_voting_threshold: 3
+    max_orchestration_restarts: 0
+    use_skills: true
+    skills_directory: .agent/skills
+    enable_agent_task_planning: true
+    task_planning_filesystem_mode: true
+    enable_memory_filesystem_mode: true
+    learning_capture_mode: verification_and_final_only
+    enable_changedoc: true
+    write_mode: auto
+    # subagent_types: [evaluator, explorer, researcher, novelty, critic, builder]
+    # subagent_types: [explorer, researcher]
+    # enable_subagents: true
+    # subagent_default_timeout: 1200
+    # subagent_max_concurrent: 3
+    # subagent_orchestrator:
+    #   enabled: true
+    #   agents:
+    #     - backend:
+    #         # type: claude_code
+    #         # model: claude-sonnet-4-6
+    #         # reasoning:
+    #         #   type: "disabled"  # since subagent
+    #         # enable_web_search: true
+    #         # Other subagent options:
+    #         # type: gemini
+    #         # model: gemini-3-flash-preview
+    #         type: groq
+    #         model: openai/gpt-oss-120b
+    #         # type: openrouter
+    #         # model:  z-ai/glm-5
+    #         # type: codex
+    #         # model: gpt-5.3-codex
+    #         # reasoning:
+    #         #   effort: medium
+    #         #   summary: auto
+  context_paths: []
+timeout_settings:
+  orchestrator_timeout_seconds: 4800
+  initial_round_timeout_seconds: 1800
+  subsequent_round_timeout_seconds: 1800
+  round_timeout_grace_seconds: 450
+ui:
+  display_type: textual_terminal
+  logging_enabled: true

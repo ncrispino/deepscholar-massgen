@@ -26,6 +26,14 @@ per_query_max_search_results_count: 10
 
 # Agentic search only
 use_responses_model: null
+# Optional MCP integration for agentic search:
+# - mcp_config_path accepts quickstart JSON:
+#   { "mcpServers": { "name": { "type": "stdio", "command": "...", "args": [...] } } }
+# - mcp_servers accepts inline list or map entries (MassGenMore-compatible).
+mcp_config_path: null
+mcp_servers: []
+allowed_tools: []
+exclude_tools: []
 
 # Recursive search only
 num_search_steps: 3

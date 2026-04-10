@@ -25,25 +25,25 @@ Run the evaluation suite from the project root directory:
 ```bash
 # Evaluate a single system with multiple metrics
 python -m eval.main \
-  --modes deepscholar_base \
+  --modes massgen \
   --evals nugget_coverage reference_coverage \
-  --input_folder tests/baselines_results/deepscholar_base_gpt_4.1 \
-  --output_folder evaluation_results/
+  --input-folder tests/baselines_results/deepscholar_base_gpt_4.1 \
+  --output-folder evaluation_results/
 
 # Evaluate multiple systems simultaneously
 python -m eval.main \
-  --modes deepscholar_base openscholar storm \
+  --modes massgen openscholar storm \
   --evals organization nugget_coverage reference_coverage \
-  --input_folder tests/baselines_results/deepscholar_base_gpt_4.1 tests/baselines_results/openscholar tests/baselines_results/storm \
-  --output_folder evaluation_results/
+  --input-folder tests/baselines_results/deepscholar_base_gpt_4.1 tests/baselines_results/openscholar tests/baselines_results/storm \
+  --output-folder evaluation_results/
 
 # Process specific papers only
 python -m eval.main \
-  --modes deepscholar_base \
+  --modes massgen \
   --evals nugget_coverage \
-  --input_folder tests/baselines_results/deepscholar_base_gpt_4.1 \
-  --file_id 0 1 2 \
-  --output_folder evaluation_results/
+  --input-folder tests/baselines_results/deepscholar_base_gpt_4.1 \
+  --file-id 0 1 2 \
+  --output-folder evaluation_results/
 ```
 
 ## 📋 Configuration Options
@@ -52,20 +52,20 @@ python -m eval.main \
 
 | Argument | Description | Example |
 |----------|-------------|---------|
-| `--modes` | Systems to evaluate | `deepscholar_base openscholar storm` |
+| `--modes` | Systems to evaluate | `massgen openscholar storm` |
 | `--evals` | Evaluation metrics to run | `nugget_coverage reference_coverage` |
-| `--input_folder` | Path to system outputs | `tests/baselines_results/` |
+| `--input-folder` | Path to system outputs | `tests/baselines_results/` |
 
 ### Optional Arguments
 
 | Argument | Default | Description |
 |----------|---------|-------------|
-| `--output_folder` | `results` | Evaluation results directory |
-| `--file_id` | All files | Specific file IDs to process |
-| `--model_name` | `gpt-4o` | LLM model for evaluation |
-| `--dataset_path` | `test/dataset/related_works_combined.csv` | Dataset file path |
-| `--essential_citations_path` | `test/dataset/essential_citations.csv` | Essential citations file |
-| `--nugget_groundtruth_dir_path` | `test/dataset/nugget_groundtruth` | Ground truth nuggets directory |
+| `--output-folder` | `results` | Evaluation results directory |
+| `--file-id` | All files | Specific file IDs to process |
+| `--model-name` | `gpt-4o` | LLM model for evaluation |
+| `--dataset-path` | `dataset/papers_with_related_works.csv` | Dataset file path |
+| `--important-citations-path` | `dataset/important_citations.csv` | Essential citations file |
+| `--nugget-groundtruth-dir-path` | `dataset/gt_nuggets_outputs` | Ground truth nuggets directory |
 
 ## 🎯 Supported Systems
 
@@ -73,7 +73,8 @@ The evaluation suite supports the following research processing systems:
 
 | System | Description | Parser Module |
 |--------|-------------|---------------|
-| **DeepScholar_Base** | AI-powered research summarization | `parsers/deepscholar_base.py` |
+| **MassGen** | AI-powered research summarization | `parsers/massgen.py` |
+| **DeepScholar_Base** | Backward-compatible alias of MassGen | `parsers/deepscholar_base.py` |
 | **OpenScholar** | Academic paper analysis | `parsers/openscholar.py` |
 | **DeepResearcher** | Deep learning research assistant | `parsers/deepresearcher.py` |
 | **STORM** | Structured topic outline research | `parsers/storm.py` |
@@ -129,13 +130,24 @@ The evaluation suite expects the following directory structure:
 
 ```
 input_folder/
-├── system_name/
-│   ├── 0/                    # Paper ID folders
-│   │   ├── output.md       # System output
-│   │   └── metadata.json     # Optional metadata
-│   ├── 1/
+├── 0/                         # Paper ID folder
+│   ├── intro.md               # Main generated related-works text
+│   ├── paper.csv              # Referenced papers (id,title,snippet,url)
+│   ├── final_report.md        # Optional full report
+│   └── stats.json             # Optional run metadata
+├── 1/
+└── ...
+```
+
+For multi-system comparison, pass one `--input-folder` per mode:
+
+```
+outputs/
+├── massgen_results/
+│   ├── 0/
 │   └── ...
-└── another_system/
+└── openscholar_results/
+    ├── 0/
     └── ...
 ```
 

@@ -38,6 +38,7 @@ class DeepResearcherParser(Parser):
         with open(self.file_path, "r", encoding="utf-8") as f:
             data = json.load(f)
         raw_text = data.get("output", "")
+        self.raw_generated_text = raw_text
 
         if self.use_local_reference_map:
             ctxs = data.get("ctxs", [])
@@ -69,6 +70,7 @@ class DeepResearcherParser(Parser):
                 {"title": info["title"], "sent": info["text"]}
                 for info in reference_map.values()
             ]
+            self.clean_text = updated_text.split("References")[0].strip()
             if not self.docs:
                 updated_text = replace_latex_cites(updated_text, reference_map)
                 self.clean_text, self.docs = self._to_autoais(updated_text)

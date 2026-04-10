@@ -20,7 +20,13 @@ class CitePEvaluator(Evaluator):
 
     def _calculate(self, parser: Parser) -> pd.DataFrame:
         sentences = custom_sent_tokenize(parser.clean_text)
-        citation_pecision = []
+        docs = parser.docs or []
+        cite_quality_docs = parser.citations_for_cite_quality or []
+        max_citable_idx = min(len(docs), len(cite_quality_docs)) - 1
+        if max_citable_idx < 0:
+            return 0.0
+
+        citation_precision = []
         for sent in sentences:
             if len(sent) < 50:
                 continue
@@ -28,9 +34,9 @@ class CitePEvaluator(Evaluator):
             target = _remove_citations(sent)
             ref = [int(x[1:]) - 1 for x in re.findall(r"\[\d+", sent)]
             for r in ref:
-                if r > len(parser.docs) - 1 or r < 0:
+                if r > max_citable_idx or r < 0:
                     continue
-                current_doc = _format_document(parser.citations_for_cite_quality[r])
+                current_doc = _format_document(cite_quality_docs[r])
                 single_entail = get_support(current_doc, target)
                 correct_citations.append(single_entail)
             precision = (
@@ -38,8 +44,10 @@ class CitePEvaluator(Evaluator):
                 if correct_citations
                 else 0
             )
-            citation_pecision.append(precision)
-        return np.mean(citation_pecision)
+            citation_precision.append(precision)
+        if not citation_precision:
+            return 0.0
+        return float(np.mean(citation_precision))
 
     def calculate(self, parsers: list[Parser]) -> pd.DataFrame:
         return pd.DataFrame(
@@ -53,7 +61,9 @@ class CitePEvaluator(Evaluator):
 
 
 def custom_sent_tokenize(text):
-    protected_text = text
+    if text is None:
+        return []
+    protected_text = str(text)
     protected_text = re.sub(r"\bet al\.", "ET_AL_PLACEHOLDER", protected_text)
     sentences = sent_tokenize(protected_text)
     sentences = [s.replace("ET_AL_PLACEHOLDER", "et al.") for s in sentences]

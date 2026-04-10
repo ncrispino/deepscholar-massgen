@@ -2,6 +2,7 @@ try:
     from parsers.parser import Parser, ParserType
     from parsers.search_ai import SearchAIParser
     from eval.parsers.deepscholar_base import DeepScholarBaseParser
+    from parsers.massgen import MassGenParser
     from parsers.storm import StormParser
     from parsers.openscholar import OpenScholarParser
     from parsers.deepresearcher import DeepResearcherParser
@@ -10,6 +11,7 @@ except ImportError:
     from .parser import Parser, ParserType
     from .search_ai import SearchAIParser
     from .deepscholar_base import DeepScholarBaseParser
+    from .massgen import MassGenParser
     from .storm import StormParser
     from .openscholar import OpenScholarParser
     from .deepresearcher import DeepResearcherParser
@@ -24,6 +26,7 @@ logger = logging.getLogger(__name__)
 __all__ = [
     "SearchAIParser",
     "DeepScholarBaseParser",
+    "MassGenParser",
     "StormParser",
     "OpenScholarParser",
     "DeepResearcherParser",
@@ -44,6 +47,8 @@ def get_parser(config: dict, folder_path: str):
         return SearchAIParser(folder_path, config)
     elif parser_type == ParserType.DEEPSCHOLAR_BASE:
         return DeepScholarBaseParser(folder_path, config)
+    elif parser_type == ParserType.MASSGEN:
+        return MassGenParser(folder_path, config)
     elif parser_type == ParserType.STORM:
         return StormParser(folder_path, config)
     elif parser_type == ParserType.OPENSCHOLAR:

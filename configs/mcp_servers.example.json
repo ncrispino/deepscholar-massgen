@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "weather": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-weather"
+      ]
+    },
+    "local_search": {
+      "type": "streamable-http",
+      "url": "http://localhost:8080/mcp"
+    }
+  }
+}

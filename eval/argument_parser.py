@@ -60,7 +60,7 @@ def parse_args():
     parser.add_argument(
         "--modes",
         nargs="+",
-        default=["deepscholar_base"],
+        default=["massgen"],
         help=(
             "System(s) to evaluate. "
             f"Choices: {', '.join(_ALL_MODES)}. "
