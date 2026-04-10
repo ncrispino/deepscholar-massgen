@@ -39,8 +39,8 @@ agents:
       - --tool-mode
       - arxiv # switch to arxiv or web to restrict tool family
     command_line_execution_mode: docker
-    # command_line_docker_image: ghcr.io/massgen/mcp-runtime-sudo:latest
-    command_line_docker_image: massgen/mcp-runtime-sudo:latest
+    command_line_docker_image: ghcr.io/massgen/mcp-runtime-sudo:latest
+    # command_line_docker_image: massgen/mcp-runtime-sudo:latest
     command_line_docker_network_mode: none  # block internet so mcp is used # bridge
     command_line_docker_enable_sudo: true
     command_line_docker_credentials:
@@ -51,12 +51,12 @@ agents:
       - GOOGLE_API_KEY
       - GEMINI_API_KEY
     shared_tools_directory: shared_tools
-    auto_discover_custom_tools: true
-    exclude_custom_tools:
-    - _computer_use
-    - _claude_computer_use
-    - _gemini_computer_use
-    - _browser_automation
+    auto_discover_custom_tools: false
+    # exclude_custom_tools:
+    # - _computer_use
+    # - _claude_computer_use
+    # - _gemini_computer_use
+    # - _browser_automation
 # - id: agent_b
 #   backend:
 #     # type: openrouter
@@ -121,6 +121,8 @@ orchestrator:
   fairness_enabled: true
   fairness_lead_cap_answers: 2
   max_midstream_injections_per_round: 2
+  defer_peer_updates_until_restart: true
+  allow_midstream_peer_updates_before_checklist_submit: true
   enable_multimodal_tools: true
   image_generation_backend: openai
   video_generation_backend: openai
@@ -131,16 +133,20 @@ orchestrator:
   coordination:
     # evaluation_criteria_generator:
     #   enabled: true
-    pre_collab_voting_threshold: 3
+    # evolving_criteria: true
+    # evolving_criteria_min_high_score_count: 0
+    fast_iteration_mode: true
+    # pre_collab_voting_threshold: 3
     max_orchestration_restarts: 0
-    use_skills: true
-    skills_directory: .agent/skills
+    use_skills: false
+    # skills_directory: .agent/skills
     enable_agent_task_planning: true
     task_planning_filesystem_mode: true
     enable_memory_filesystem_mode: true
     learning_capture_mode: verification_and_final_only
     enable_changedoc: true
     write_mode: auto
+    # auto_trace_analysis: true  # TODO: try this
     # subagent_types: [evaluator, explorer, researcher, novelty, critic, builder]
     # subagent_types: [explorer, researcher]
     # enable_subagents: true
