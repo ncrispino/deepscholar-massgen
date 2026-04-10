@@ -67,6 +67,17 @@ Then, run the full pipeline—report generation and evaluation—with:
 ```
 Generation results are written to `./outputs/results/` and evaluation results to `./outputs/evaluation/`.
 
+#### Running a Subset with Parallel Workers
+
+To run a specific range of queries (e.g., 0–65) with parallel workers, use `python -m massgen_runner.main` directly with `--start-idx` and `--end-idx`. Each shard writes to a separate subdirectory (`<output-folder>/<file_id>/`), so there's no overlap:
+
+```bash
+# 2 parallel shards covering queries 0-65
+python -m massgen_runner.main --queries-file dataset/queries.csv --output-folder outputs/results_minimax --massgen-config configs/massgen.config.yaml --start-idx 0 --end-idx 33 &
+python -m massgen_runner.main --queries-file dataset/queries.csv --output-folder outputs/results_minimax --massgen-config configs/massgen.config.yaml --start-idx 33 --end-idx 66 &
+wait
+```
+
 `./scripts/run_all.sh` remains available as a compatibility entrypoint.
 
 Useful options:
