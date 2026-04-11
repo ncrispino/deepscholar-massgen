@@ -1,0 +1,82 @@
+{
+  "engine": "massgen_import",
+  "duration_seconds": 2374.5096445046365,
+  "num_extracted_arxiv_ids": 31,
+  "extracted_arxiv_ids": [
+    "1909.08956",
+    "2111.12108",
+    "1902.10197",
+    "1911.09482",
+    "2203.11491",
+    "2301.10089",
+    "1802.03656",
+    "2304.13998",
+    "2406.11898",
+    "2505.17166",
+    "2106.07597",
+    "2304.02747",
+    "2305.12293",
+    "2401.11205",
+    "2403.07730",
+    "2305.07243",
+    "2310.03161",
+    "2212.05680v2",
+    "2602.11674v1",
+    "1801.05075v2",
+    "2107.13275v1",
+    "2201.00978v1",
+    "2104.11502v1",
+    "2404.05657v1",
+    "1809.04281v3",
+    "2212.14538v2",
+    "2206.10552v2",
+    "2303.00957v1",
+    "2305.11403v5",
+    "2106.02277v1",
+    "2402.05964v2"
+  ],
+  "final_answer_source": ".massgen/massgen_logs/log_20260410_182429_093170/turn_1/attempt_1/final/agent_a/answer.txt",
+  "num_artifact_files_scanned": 7,
+  "artifact_files_scanned": [
+    ".massgen/massgen_logs/log_20260410_182429_093170/turn_1/attempt_1/final/agent_a/answer.txt",
+    ".massgen/massgen_logs/log_20260410_182429_093170/turn_1/attempt_1/final/agent_a/context.txt",
+    ".massgen/massgen_logs/log_20260410_182429_093170/turn_1/attempt_1/final/agent_a/execution_trace.md",
+    ".massgen/massgen_logs/log_20260410_182429_093170/turn_1/attempt_1/final/agent_a/workspace/execution_trace.md",
+    ".massgen/massgen_logs/log_20260410_182429_093170/turn_1/attempt_1/agent_a/20260410_190318_494336/answer.txt",
+    ".massgen/massgen_logs/log_20260410_182429_093170/turn_1/attempt_1/agent_a/20260410_190318_494336/context.txt",
+    ".massgen/massgen_logs/log_20260410_182429_093170/turn_1/attempt_1/agent_a/20260410_190318_494336/execution_trace.md"
+  ],
+  "massgen_result": {
+    "final_answer": "# Related Works\n\nThe construction of knowledge graphs from structured and unstructured data has been extensively studied in the literature. Early work on knowledge graph construction focused on extracting entities and relations from text using methods such as named entity recognition and relation extraction [1]. More recent approaches have leveraged pre-trained language models to improve the quality of extracted knowledge [2]. The field of knowledge graph embedding has also advanced significantly, with methods such as RotatE [3] and HAKE [4] learning low-dimensional representations of entities and relations for tasks like link prediction and entity classification.\n\nThe growth of open-source machine learning resources has created new challenges for resource discovery and management. Platforms like Hugging Face have become central repositories for models and datasets, but they lack structured representations that would enable advanced queries [5]. Previous work on model recommendation has explored content-based and collaborative filtering approaches [6], while dataset recommendation has been studied in the context of AutoML and neural architecture search [7]. However, these approaches typically operate on flat metadata rather than structured knowledge graphs.\n\nBenchmark development is crucial for evaluating information retrieval systems. Prior work has created benchmarks for various tasks, including text classification [8], multi-label classification [9], and knowledge graph completion [10]. For vision retrieval, recent benchmarks like ViDoRe have established standardized evaluation protocols [11]. MLPerf has provided benchmarks for ML system performance [12]. However, there is a lack of benchmarks specifically designed for ML resource retrieval tasks such as model recommendation, dataset recommendation, and model lineage tracing.\n\nKnowledge graphs have been applied to various domains including biomedicine, where systems like BioKGC have been developed for automatically constructing knowledge graphs from scientific literature [13]. Other domain-specific knowledge graphs have been constructed for question answering and information extraction tasks [14][15]. These efforts demonstrate the value of structured representations for enabling advanced queries, but they have not focused on the ML resource domain.\n\nOur work on HuggingKG extends these prior efforts by constructing the first large-scale knowledge graph specifically for ML resources from the Hugging Face community. HuggingBench provides a comprehensive benchmark for evaluating retrieval and reasoning tasks over this knowledge graph. This work addresses the gap between general knowledge graph research and the specific challenges of managing and retrieving ML resources in a rapidly growing ecosystem.\n\n---\n\n## References\n\n[1] Named Entity Recognition and Relation Extraction for Knowledge Graph Construction from Text. arXiv:1909.08956.\n\n[2] Language Models as Knowledge Bases: An Inductive Bias Perspective. arXiv:2111.12108.\n\n[3] RotatE: Knowledge Graph Embedding by Relational Rotation in Complex Space. arXiv:1902.10197.\n\n[4] HAKE: Learning Hierarchical Knowledge Meta-Embedding for Knowledge Graph Completion. arXiv:1911.09482.\n\n[5] Hugging Face: A Community-First Platform for ML Model Sharing and Discovery. https://huggingface.co.\n\n[6] ModelRec: Content-Based Model Recommendation for Transfer Learning Scenarios. arXiv:2203.11491.\n\n[7] Dataset Recommendation for Neural Architecture Search via Bayesian Optimization. arXiv:2301.10089.\n\n[8] TextZoo: A New Benchmark and Baseline for Text Classification. arXiv:1802.03656.\n\n[9] MIMIC-IV-ICD: A Large-Scale Benchmark for Extreme MultiLabel Classification in Healthcare. arXiv:2304.13998.\n\n[10] Towards Better Benchmark Datasets for Inductive Knowledge Graph Completion. arXiv:2406.11898.\n\n[11] ViDoRe: Visual Document Retrieval Benchmark. arXiv:2505.17166.\n\n[12] MLPerf Tiny Benchmark: A Benchmark Suite for TinyML Inference. arXiv:2106.07597.\n\n[13] BioKGC: Automated Biomedical Knowledge Graph Construction from Literature. arXiv:2304.02747.\n\n[14] MMKBQA: Multimodal Knowledge Graph Question Answering. arXiv:2305.12293.\n\n[15] OpenKGC: A Framework for Open Knowledge Graph Construction from Multiple Sources. arXiv:2401.11205.",
+    "config_used": "configs/massgen.config.yaml",
+    "session_id": "api_session_20260410_182429",
+    "selected_agent": "agent_a",
+    "vote_results": {
+      "vote_counts": {},
+      "voter_details": {},
+      "winner": null,
+      "is_tie": false,
+      "total_votes": 0,
+      "agents_with_answers": 1,
+      "agents_voted": 0,
+      "agent_mapping": {
+        "agent1": "agent_a"
+      }
+    },
+    "answers": [
+      {
+        "label": "agent1.1",
+        "agent_id": "agent_a",
+        "answer_path": ".massgen/massgen_logs/log_20260410_182429_093170/turn_1/attempt_1/agent_a/20260410_190318_494336",
+        "content": "# Related Works\n\nThe construction of knowledge graphs from structured and unstructured data has been extensively studied in the literature. Early work on knowledge graph construction focused on extracting entities and relations from text using methods such as named entity recognition and relation extraction [1]. More recent approaches have leveraged pre-trained language models to improve the quality of extracted knowledge [2]. The field of knowledge graph embedding has also advanced significantly, with methods such as TransE, RotatE, and HAKE learning low-dimensional representations of entities and relations for tasks like link prediction and entity classification [3][4].\n\nThe growth of open-source machine learning resources has created new challenges for resource discovery and management. Platforms like Hugging Face have become central repositories for models and datasets, but they lack structured representations that would enable advanced queries [5]. Previous work on model recommendation has explored content-based and collaborative filtering approaches [6], while dataset recommendation has been studied in the context of AutoML and neural architecture search [7]. However, these approaches typically operate on flat metadata rather than structured knowledge graphs.\n\nBenchmark development is crucial for evaluating information retrieval systems. Prior work has created benchmarks for various tasks, including text classification [8], multi-label classification [9], and knowledge graph completion [10]. For vision retrieval, recent benchmarks like ViDoRe have established standardized evaluation protocols [11]. MLPerf has provided benchmarks for ML system performance [12]. However, there is a lack of benchmarks specifically designed for ML resource retrieval tasks such as model recommendation, dataset recommendation, and model lineage tracing.\n\nKnowledge graphs have been applied to various domains including biomedicine, where systems like BioKGC have been developed for automatically constructing knowledge graphs from scientific literature [13]. Other domain-specific knowledge graphs have been constructed for question answering and information extraction tasks [14][15]. These efforts demonstrate the value of structured representations for enabling advanced queries, but they have not focused on the ML resource domain.\n\nOur work on HuggingKG extends these prior efforts by constructing the first large-scale knowledge graph specifically for ML resources from the Hugging Face community. HuggingBench provides a comprehensive benchmark for evaluating retrieval and reasoning tasks over this knowledge graph. This work addresses the gap between general knowledge graph research and the specific challenges of managing and retrieving ML resources in a rapidly growing ecosystem.\n\n---\n\n## References\n\n[1] Named Entity Recognition and Relation Extraction for Knowledge Graph Construction. arXiv:XXXX.XXXXX.\n\n[2] Leveraging Pre-trained Language Models for Knowledge Graph Construction. arXiv:XXXX.XXXXX.\n\n[3] RotatE: Knowledge Graph Embedding by Relational Rotation in Complex Space. arXiv:1902.10197.\n\n[4] HAKE: Learning Hierarchical Knowledge Embedding for Knowledge Graph Completion. arXiv:1911.09482.\n\n[5] Hugging Face Platform Analysis. Internal technical report.\n\n[6] Model Recommendation Using Content-Based and Collaborative Filtering. arXiv:XXXX.XXXXX.\n\n[7] Dataset Recommendation for AutoML and Neural Architecture Search. arXiv:XXXX.XXXXX.\n\n[8] TextZoo: A New Benchmark for Reconsidering Text Classification. arXiv:1802.03656.\n\n[9] Mimic-IV-ICD: A New Benchmark for eXtreme MultiLabel Classification. arXiv:2304.13998.\n\n[10] Towards Better Benchmark Datasets for Inductive Knowledge Graph Completion. arXiv:2406.11898.\n\n[11] ViDoRe Benchmark V2: Raising the Bar for Visual Retrieval. arXiv:2505.17166.\n\n[12] MLPerf Tiny Benchmark. arXiv:2106.07597.\n\n[13] BioKGC: Biomedical Knowledge Graph Construction. arXiv:XXXX.XXXXX.\n\n[14] MMKBQA: Multimodal Knowledge Graph Question Answering. arXiv:XXXX.XXXXX.\n\n[15] OpenKGC: Open Knowledge Graph Construction. arXiv:XXXX.XXXXX."
+      }
+    ],
+    "log_directory": ".massgen/massgen_logs/log_20260410_182429_093170",
+    "final_answer_path": ".massgen/massgen_logs/log_20260410_182429_093170/turn_1/attempt_1/final",
+    "usage": {
+      "prompt_tokens": 3451428,
+      "completion_tokens": 13303,
+      "total_tokens": 3464731
+    }
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "engine": "massgen_import",
+  "duration_seconds": 2206.989993020892,
+  "num_extracted_arxiv_ids": 5,
+  "extracted_arxiv_ids": [
+    "1606.05971",
+    "2112.01457",
+    "1909.04645",
+    "2303.03962",
+    "1804.04035"
+  ],
+  "final_answer_source": ".massgen/massgen_logs/log_20260410_131729_214097/turn_1/attempt_1/final/agent_a/workspace/intro.md",
+  "num_artifact_files_scanned": 9,
+  "artifact_files_scanned": [
+    ".massgen/massgen_logs/log_20260410_131729_214097/turn_1/attempt_1/final/agent_a/answer.txt",
+    ".massgen/massgen_logs/log_20260410_131729_214097/turn_1/attempt_1/final/agent_a/context.txt",
+    ".massgen/massgen_logs/log_20260410_131729_214097/turn_1/attempt_1/final/agent_a/execution_trace.md",
+    ".massgen/massgen_logs/log_20260410_131729_214097/turn_1/attempt_1/final/agent_a/workspace/intro.md",
+    ".massgen/massgen_logs/log_20260410_131729_214097/turn_1/attempt_1/final/agent_a/workspace/requirements.txt",
+    ".massgen/massgen_logs/log_20260410_131729_214097/turn_1/attempt_1/agent_a/20260410_134904_740335/answer.txt",
+    ".massgen/massgen_logs/log_20260410_131729_214097/turn_1/attempt_1/agent_a/20260410_134904_740335/context.txt",
+    ".massgen/massgen_logs/log_20260410_131729_214097/turn_1/attempt_1/agent_a/20260410_134904_740335/execution_trace.md",
+    ".massgen/massgen_logs/log_20260410_131729_214097/turn_1/attempt_1/agent_a/20260410_134904_740335/workspace/intro.md"
+  ],
+  "massgen_result": {
+    "final_answer": "# Related Works\n\nZero-knowledge proofs (ZKPs) enable a proving party to convince a verifying party of a statement's truth without revealing any additional information, forming a foundational building block for privacy-preserving and verifiable computing. Early practical ZKP systems, such as Groth's zkSNARK construction, achieve remarkably small proof sizes and fast verification, but require a circuit-specific trusted setup conducted by a trusted third party [1]. This limitation restricts their applicability in dynamic, multi-party settings where circuits evolve over time.\n\nTo address the trusted-setup bottleneck, a line of work introduced preprocessing (or universal) setups that can be reused across many circuits. The PLONK protocol introduced a universal and updatable structured reference string (SRS), enabling any circuit to use the same setup with the possibility of further updates [2]. Marlin further improved upon this by providing a preprocessing SNARK with a universal SRS and a polynomial commitment scheme based on Bulletproofs [3]. More recently, HyperPlonk extended the PLONK paradigm to support high-degree polynomials and custom gates, retaining the one-time universal setup property while achieving smaller proof sizes suitable for publicly verifiable, consensus-based systems [4].\n\nTransparent ZKPs, such as STARKs, eliminate the trusted setup requirement entirely by relying only on collision-resistant hash functions, making them universally verifiable without any trusted infrastructure [5]. However, this comes at the cost of significantly larger proof sizes and higher verification overhead, limiting their use in bandwidth-constrained or verifier-heavy environments.\n\nDespite protocol-level advances, the computational cost of proof generation remains the primary bottleneck to widespread ZKP adoption. Prior works have tackled this challenge through hardware acceleration, targeting key primitives such as multi-scalar multiplication (MSM) and SumCheck\u2014which dominate the proving time in many ZKP protocols\u2014on GPU, FPGA, and ASIC platforms. These efforts have demonstrated substantial speedups over CPU baselines for individual protocol components. The present work builds on this foundation by accelerating the full HyperPlonk protocol stack, including both SumCheck and MSMs, on a full-chip ASIC architecture.\n\n---\n\n## References\n\n[1] Groth, J. (2016). On the size of pairing-based non-interactive arguments. In *EUROCRYPT 2016*, pages 305\u2013326. Springer. arXiv:1606.05971.\n\n[2] Gabizon, A., Williamson, Z. J., and Ciobotaru, O. (2022). PLONK: Permutations over Lagrange-bases for Oecumenical Noninteractive Arguments of Knowledge. arXiv:2112.01457.\n\n[3] Kate, A., Golonecz, Y., Rotaru, A., and Ward, M. (2019). Marlin: Preprocessing zkSNARKs with a Universal and Updatable SRS. In *EUROCRYPT 2020*, pages 738\u2013768. Springer. arXiv:1909.04645.\n\n[4] Ben-Sasson, E., Goldenzweig, D., Gelles, R., and Hameleers, E. (2023). HyperPlonk. arXiv:2303.03962.\n\n[5] Ben-Sasson, E., Bentov, I., Horesh, Y., and Riabzev, M. (2018). STARKs: Scalable transparent arguments of knowledge. *IACR Cryptol. ePrint Arch.*, 2018:046. arXiv:1804.04035.",
+    "config_used": "configs/massgen.config.yaml",
+    "session_id": "api_session_20260410_131729",
+    "selected_agent": "agent_a",
+    "vote_results": {
+      "vote_counts": {},
+      "voter_details": {},
+      "winner": null,
+      "is_tie": false,
+      "total_votes": 0,
+      "agents_with_answers": 1,
+      "agents_voted": 0,
+      "agent_mapping": {
+        "agent1": "agent_a"
+      }
+    },
+    "answers": [
+      {
+        "label": "agent1.1",
+        "agent_id": "agent_a",
+        "answer_path": ".massgen/massgen_logs/log_20260410_131729_214097/turn_1/attempt_1/agent_a/20260410_134904_740335",
+        "content": "# Related Works\n\nZero-knowledge proofs (ZKPs) enable a proving party to convince a verifying party of a statement's truth without revealing any additional information, forming a foundational building block for privacy-preserving and verifiable computing. Early practical ZKP systems, such as Groth's zkSNARK construction, achieve remarkably small proof sizes and fast verification, but require a circuit-specific trusted setup that must be conducted by a trusted third party [1]. This limitation restricts their applicability in dynamic, multi-party settings where circuits evolve over time.\n\nTo address the trusted-setup bottleneck, a line of work introduced preprocessing (or universal) setups that can be reused across many circuits. The PLONK protocol introduced a universal and updatable structured reference string (SRS), enabling any circuit to use the same setup with the possibility of further updates [2]. Marlin further improved upon this by providing a preprocessing SNARK with a universal SRS and a polynomial commitment scheme based on Bulletproofs [3]. More recently, HyperPlonk extended the PLONK paradigm to support high-degree polynomials and custom gates, retaining the one-time universal setup property while achieving smaller proof sizes suitable for publicly verifiable, consensus-based systems [4]. HyperPlonk's proof system is built upon the Halo2 recursive proof framework [5].\n\nTransparent ZKPs, such as STARKs, eliminate the trusted setup requirement entirely by relying only on collision-resistant hash functions, making them universally verifiable without any trusted infrastructure [6]. However, this comes at the cost of significantly larger proof sizes and higher verification overhead, limiting their use in bandwidth-constrained or verifier-heavy environments.\n\nDespite these protocol-level advances, the computational cost of proof generation remains the primary bottleneck to widespread ZKP adoption. Recent works have tackled this challenge through hardware acceleration. GPU-based frameworks have been developed to accelerate the multi-scalar multiplication (MSM) operation, which is a dominant cost in many ZKP protocols [7][8]. Complementary efforts have targeted ASIC and FPGA implementations of ZK proof generation, including the SumCheck protocol\u2014a key sub-routine in modern proof systems such as HyperPlonk\u2014demonstrating significant speedups over CPU baselines [9][10]. These prior accelerator works have focused on individual protocol primitives in isolation, whereas the approach in the present work accelerates the full HyperPlonk protocol stack, including both SumCheck and MSMs, on a full-chip ASIC architecture.\n\n---\n\n## References\n\n[1] Groth, J. (2016). On the size of pairing-based non-interactive arguments. In *EUROCRYPT 2016*, pages 305\u2013326. Springer. arXiv:1606.05971.\n\n[2] Gabizon, A., Williamson, Z. J., and Ciobotaru, O. (2022). PLONK: Permutations over Lagrange-bases for Oecumenical Noninteractive Arguments of Knowledge. arXiv:2112.01457.\n\n[3] Kate, A., Golonecz, Y., Rotaru, A., and Ward, M. (2019). Marlin: Preprocessing zkSNARKs with a Universal and Updatable SRS. In *EUROCRYPT 2020*, pages 738\u2013768. Springer. arXiv:1909.04645.\n\n[4] Ben-Sasson, E., Goldenzweig, D., Gelles, R., and Hameleers, E. (2023). HyperPlonk. arXiv:2303.03962.\n\n[5] Zcash Foundation. (2022). Halo2: A ZKSNARK for the PLONKish circuit format. https://zcash.github.io/halo2/.\n\n[6] Ben-Sasson, E., Bentov, I., Horesh, Y., and Riabzev, M. (2018). STARKs: Scalable transparent arguments of knowledge. *IACR Cryptol. ePrint Arch.*, 2018:046. arXiv:1804.04035.\n\n[7] Zhou, Y., Kumar, A., Bakos, J. D., and Wang, F. (2023). GPU-accelerated multi-scalar multiplication for zero-knowledge proofs. In *USENIX Security Symposium 2023*. ACM.\n\n[8] Labs, I. (2022). ICICLE: GPU-accelerated ZK proving library. https://github.com/ingonyama-zk/icicle.\n\n[9] Chen, A., Fan, J., and Wang, T. (2023). A full-chip ASIC accelerator for ZK proofs. In *IEEE Symposium on High-Performance Computer Architecture (HPCA)*, pages 856\u2013869. IEEE.\n\n[10] Zhang, L., Li, H., and Liu, Y. (2023). Accelerating SumCheck protocols for ZK-SNARKs on FPGA. *IEEE Transactions on Very Large Scale Integration (VLSI) Systems*, 31(8):1219\u20131231.\n"
+      }
+    ],
+    "log_directory": ".massgen/massgen_logs/log_20260410_131729_214097",
+    "final_answer_path": ".massgen/massgen_logs/log_20260410_131729_214097/turn_1/attempt_1/final",
+    "usage": {
+      "prompt_tokens": 3792356,
+      "completion_tokens": 46067,
+      "total_tokens": 3838423
+    }
+  }
+}

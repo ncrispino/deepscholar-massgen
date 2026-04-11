@@ -1,0 +1,66 @@
+{
+  "engine": "massgen_import",
+  "duration_seconds": 1357.2640239223838,
+  "num_extracted_arxiv_ids": 14,
+  "extracted_arxiv_ids": [
+    "2010.02502",
+    "2112.10752",
+    "2312.00752",
+    "2107.10833",
+    "2104.13371",
+    "2201.12250",
+    "2302.08309",
+    "2304.13371",
+    "2011.13456",
+    "2208.00079",
+    "2204.03458",
+    "2210.09276",
+    "2108.01073",
+    "2006.11239"
+  ],
+  "final_answer_source": ".massgen/massgen_logs/log_20260410_143134_410284/turn_1/attempt_1/final/agent_a/workspace/intro.md",
+  "num_artifact_files_scanned": 8,
+  "artifact_files_scanned": [
+    ".massgen/massgen_logs/log_20260410_143134_410284/turn_1/attempt_1/final/agent_a/answer.txt",
+    ".massgen/massgen_logs/log_20260410_143134_410284/turn_1/attempt_1/final/agent_a/context.txt",
+    ".massgen/massgen_logs/log_20260410_143134_410284/turn_1/attempt_1/final/agent_a/execution_trace.md",
+    ".massgen/massgen_logs/log_20260410_143134_410284/turn_1/attempt_1/final/agent_a/workspace/intro.md",
+    ".massgen/massgen_logs/log_20260410_143134_410284/turn_1/attempt_1/agent_a/20260410_145316_424091/answer.txt",
+    ".massgen/massgen_logs/log_20260410_143134_410284/turn_1/attempt_1/agent_a/20260410_145316_424091/context.txt",
+    ".massgen/massgen_logs/log_20260410_143134_410284/turn_1/attempt_1/agent_a/20260410_145316_424091/execution_trace.md",
+    ".massgen/massgen_logs/log_20260410_143134_410284/turn_1/attempt_1/agent_a/20260410_145316_424091/workspace/intro.md"
+  ],
+  "massgen_result": {
+    "final_answer": "# Related Works\n\nVideo super-resolution (VSR) aims to reconstruct high-resolution video frames from low-resolution inputs, requiring both spatial detail preservation and temporal consistency across frames. Traditional CNN-based VSR methods, such as BasicVSR++ [5], achieve strong temporal consistency by propagating features across frames using optical flow alignment. More recently, the Video Restoration Transformer (VRT) [6] demonstrated the effectiveness of self-attention mechanisms for modeling long-range temporal dependencies in video restoration. However, both approaches operate in pixel space and struggle to generate perceptually realistic high-frequency details under complex real-world degradations.\n\nDiffusion probabilistic models, particularly denoising diffusion implicit models [1], have emerged as powerful generative models capable of producing high-quality images. The latent diffusion model [2] further improved efficiency by operating in a compressed latent space, enabling high-resolution synthesis at reduced computational cost. These advances have inspired growing interest in applying diffusion models to video restoration tasks. However, applying diffusion models to VSR introduces significant challenges: the inherent randomness of the denoising process causes temporal inconsistencies and generates artifacts across frames, which is particularly problematic for video where frame-to-frame coherence is essential.\n\nTo control diffusion model outputs, ControlNet [7] introduced a conditional guidance mechanism that adds spatial control signals to pre-trained diffusion models without fine-tuning the backbone. This approach has been widely adopted for conditional image generation and extended to image restoration tasks where spatial guidance directs the generation process. The use of high-resolution features as guidance within a self-supervised ControlNet framework, however, remains underexplored.\n\nEfficient sequence modeling is critical for video processing at scale. The Mamba architecture [3] introduced a selective state space model (SSM) achieving linear-time sequence modeling, offering a more scalable alternative to transformers for long sequences. Unlike standard SSMs, Mamba's selective mechanism dynamically compresses or expands information based on content, making it well-suited for video understanding where not all frames are equally informative.\n\nReal-world VSR is particularly challenging because real low-resolution videos contain complex, unknown degradations that cannot be modeled by simple bicubic downsampling. Real-ESRGAN [4] addressed this by training on synthetic paired data with a diverse degradation pipeline, enabling blind super-resolution of real-world images. Self-supervised and contrastive learning approaches have further advanced this direction by learning degradation-insensitive features directly from unpaired data, reducing reliance on synthetic training pairs.\n\nDespite progress in individual areas, no prior work has effectively combined self-supervised learning, efficient state space modeling, and diffusion-based generation within a unified framework for real-world VSR. The proposed method bridges this gap by introducing a self-supervised ControlNet leveraging high-resolution features as guidance with contrastive learning for degradation-insensitive feature extraction, while integrating a Video State-Space block with 3D Selective Scan to model global spatio-temporal dependencies in the diffusion process at an affordable computational cost.\n\n---\n\n# References\n\n[1] J. Song, C. Meng, and S. Ermon, \"Denoising Diffusion Implicit Models,\" arXiv:2010.02502, 2020.\n\n[2] R. Rombach, A. Blattmann, D. Lorenz, P. Esser, and B. Ommer, \"High-Resolution Image Synthesis with Latent Diffusion Models,\" arXiv:2112.10752, 2022.\n\n[3] A. Gu and T. Dao, \"Mamba: Linear-Time Sequence Modeling with Selective State Spaces,\" arXiv:2312.00752, 2023.\n\n[4] X. Wang, L. Xie, C. Dong, and Y. Shan, \"Real-ESRGAN: Training Real-World Blind Super-Resolution with Single Synthetic Samples,\" arXiv:2107.10833, 2021.\n\n[5] K. C. Chan, X. Wang, K. Yu, C. Dong, and C. Change Loy, \"BasicVSR++: Improving Video Super-Resolution with Enhanced Propagation and Alignment,\" arXiv:2104.13371, 2021.\n\n[6] Y. Zhou, J. Yang, W. Shen, and T. Guo, \"VRT: A Video Restoration Transformer,\" arXiv:2201.12250, 2022.\n\n[7] L. Zhang, A. Rao, and M. Agrawala, \"Adding Conditional Control to Text-to-Image Diffusion Models,\" arXiv:2302.08309, 2023.",
+    "config_used": "configs/massgen.config.yaml",
+    "session_id": "api_session_20260410_143134",
+    "selected_agent": "agent_a",
+    "vote_results": {
+      "vote_counts": {},
+      "voter_details": {},
+      "winner": null,
+      "is_tie": false,
+      "total_votes": 0,
+      "agents_with_answers": 1,
+      "agents_voted": 0,
+      "agent_mapping": {
+        "agent1": "agent_a"
+      }
+    },
+    "answers": [
+      {
+        "label": "agent1.1",
+        "agent_id": "agent_a",
+        "answer_path": ".massgen/massgen_logs/log_20260410_143134_410284/turn_1/attempt_1/agent_a/20260410_145316_424091",
+        "content": "# Related Works\n\nVideo super-resolution (VSR) aims to reconstruct high-resolution video frames from low-resolution inputs, a task that demands both spatial detail preservation and temporal consistency across frames. Traditional convolutional neural network approaches to VSR, including flow-based methods such as BasicVSR++ [5], achieve strong temporal consistency by propagating features across frames using optical flow alignment. More recently, the Video Restoration Transformer (VRT) [6] introduced a transformer architecture for video restoration, demonstrating the effectiveness of self-attention mechanisms in modeling long-range temporal dependencies. Despite these advances, both approaches operate in the pixel space and struggle to generate perceptually realistic high-frequency details in real-world scenarios with complex degradations.\n\nDiffusion probabilistic models, particularly denoising diffusion implicit models [1], have emerged as powerful generative models capable of producing high-quality images. The latent diffusion model [2] further improved efficiency by operating in a compressed latent space, enabling high-resolution image synthesis at reduced computational cost. These advances have inspired growing interest in applying diffusion models to video restoration tasks. However, applying diffusion models to VSR introduces significant challenges: the inherent randomness of the denoising process causes temporal inconsistencies and generates artifacts across frames, which is particularly problematic for video where frame-to-frame coherence is essential.\n\nTo control the output of diffusion models, ControlNet [7] introduced a conditional guidance mechanism that adds spatial control signals (e.g., edge maps, depth) to pre-trained diffusion models without fine-tuning the backbone. This approach has been widely adopted for conditional image generation and has been extended to image restoration tasks where spatial guidance from intermediate features is used to direct the generation process. The use of high-resolution features as guidance in a self-supervised ControlNet framework, however, remains underexplored.\n\nEfficient sequence modeling is critical for video processing at scale. The Mamba architecture [3] introduced a selective state space model (SSM) that achieves linear-time sequence modeling, offering a more scalable alternative to transformers for long sequences. Unlike standard SSMs, Mamba's selective mechanism allows the model to dynamically compress or expand information based on content, making it well-suited for video understanding tasks where not all frames are equally informative.\n\nReal-world VSR is particularly challenging because real low-resolution videos contain complex, unknown degradations that cannot be modeled by simple bicubic downsampling. Real-ESRGAN [4] addressed this by training on synthetic paired data with a diverse degradation pipeline, enabling blind super-resolution of real-world images. Self-supervised and contrastive learning approaches have further advanced this direction by learning degradation-insensitive features directly from unpaired data, reducing reliance on synthetic training pairs.\n\nDespite progress in individual areas, no prior work has effectively combined self-supervised learning, efficient state space modeling, and diffusion-based generation within a unified framework for real-world VSR. The proposed method bridges this gap by introducing a self-supervised ControlNet that leverages high-resolution features as guidance and employs contrastive learning to extract degradation-insensitive features, while integrating a Video State-Space block with 3D Selective Scan to model global spatio-temporal dependencies in the diffusion process at an affordable computational cost.\n\n---\n\n# References\n\n[1] J. Song, C. Meng, and S. Ermon, \"Denoising Diffusion Implicit Models,\" arXiv:2010.02502, 2020.\n\n[2] R. Rombach, A. Blattmann, D. Lorenz, P. Esser, and B. Ommer, \"High-Resolution Image Synthesis with Latent Diffusion Models,\" arXiv:2112.10752, 2022.\n\n[3] A. Gu and T. Dao, \"Mamba: Linear-Time Sequence Modeling with Selective State Spaces,\" arXiv:2312.00752, 2023.\n\n[4] X. Wang, L. Xie, C. Dong, and Y. Shan, \"Real-ESRGAN: Training Real-World Blind Super-Resolution with Single Synthetic Samples,\" arXiv:2107.10833, 2021.\n\n[5] K. C. Chan, X. Wang, K. Yu, C. Dong, and C. Change Loy, \"BasicVSR++: Improving Video Super-Resolution with Enhanced Propagation and Alignment,\" arXiv:2104.13371, 2022.\n\n[6] Y. Zhou, J. Yang, W. Shen, and T. Guo, \"VRT: A Video Restoration Transformer,\" arXiv:2201.12250, 2022.\n\n[7] L. Zhang, A. Rao, and M. Agrawala, \"Adding Conditional Control to Text-to-Image Diffusion Models,\" arXiv:2302.08309, 2023.\n"
+      }
+    ],
+    "log_directory": ".massgen/massgen_logs/log_20260410_143134_410284",
+    "final_answer_path": ".massgen/massgen_logs/log_20260410_143134_410284/turn_1/attempt_1/final",
+    "usage": {
+      "prompt_tokens": 2138873,
+      "completion_tokens": 27406,
+      "total_tokens": 2166279
+    }
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "engine": "massgen_import",
+  "duration_seconds": 2478.7365164812654,
+  "num_extracted_arxiv_ids": 11,
+  "extracted_arxiv_ids": [
+    "2103.00020",
+    "1910.08356",
+    "2112.03506",
+    "2112.03857",
+    "2204.04910",
+    "2204.02680",
+    "2109.01134",
+    "2111.09877",
+    "2301.12767",
+    "2201.02311",
+    "2102.05918"
+  ],
+  "final_answer_source": ".massgen/massgen_logs/log_20260410_152848_903325/turn_1/attempt_1/final/agent_a/answer.txt",
+  "num_artifact_files_scanned": 7,
+  "artifact_files_scanned": [
+    ".massgen/massgen_logs/log_20260410_152848_903325/turn_1/attempt_1/final/agent_a/answer.txt",
+    ".massgen/massgen_logs/log_20260410_152848_903325/turn_1/attempt_1/final/agent_a/context.txt",
+    ".massgen/massgen_logs/log_20260410_152848_903325/turn_1/attempt_1/final/agent_a/execution_trace.md",
+    ".massgen/massgen_logs/log_20260410_152848_903325/turn_1/attempt_1/final/agent_a/workspace/execution_trace.md",
+    ".massgen/massgen_logs/log_20260410_152848_903325/turn_1/attempt_1/agent_a/20260410_160919_530111/answer.txt",
+    ".massgen/massgen_logs/log_20260410_152848_903325/turn_1/attempt_1/agent_a/20260410_160919_530111/context.txt",
+    ".massgen/massgen_logs/log_20260410_152848_903325/turn_1/attempt_1/agent_a/20260410_160919_530111/execution_trace.md"
+  ],
+  "massgen_result": {
+    "final_answer": "# Related Works\n\nOpen-vocabulary object detection enables recognizing arbitrary object categories specified via natural language at test time, representing a significant shift from traditional closed-set detection. This work draws upon advances in vision-language models, open-vocabulary detection frameworks, and training-free adaptation methods.\n\n## Vision-Language Models for Detection\n\nLarge-scale vision-language models have become foundational for open-vocabulary recognition. CLIP [1] learns joint image-text embeddings from web data, enabling zero-shot transfer to unseen categories. This pretrained model provides both visual features and text encoders that subsequent detection methods leverage. OVR-CNN [2] demonstrated that region-level features from CLIP could enable open-vocabulary detection by training with image-caption pairs. RegionCLIP [3] extended this by explicitly aligning image regions with textual descriptions, improving localization of novel categories.\n\n## Open-Vocabulary Detection Methods\n\nAdapting vision-language models for detection has yielded significant progress. GLIP [4] formulates detection as a grounding task, achieving strong zero-shot performance by jointly learning phrase grounding and object detection from web data. Transformer-based open-vocabulary detectors [5][6] align detection features with CLIP text embeddings to recognize arbitrary categories specified at test time. However, these methods typically require training or fine-tuning on annotated detection data.\n\n## Training-Free Adaptation\n\nA key challenge addressed by this work is that user-specified vocabularies may be overly broad or misaligned with image content. Prompt learning methods [7] have explored adapting CLIP to downstream tasks through learned textual prompts, but require training. Recent plug-and-play adaptation methods [8][9] enable customizing models without training through lightweight feature or pathway adapters. However, these approaches primarily target image classification rather than detection. The proposed Vocabulary Adapter extends the training-free adaptation paradigm to detection, dynamically refining vocabularies based on image-specific content.\n\n## Zero-Shot Detection\n\nTraditional zero-shot detection [10] has relied on attribute-based reasoning or transferred semantic knowledge, often struggling with localization precision. The Vocabulary Adapter addresses this by refining detection vocabularies at inference time, improving both precision and recall for user-specified categories without additional training or fine-tuning.\n\n---\n\n## References\n\n[1] A. Radford, J. W. Kim, C. Hallacy, A. Ramesh, G. Goh, S. Agarwal, G. Sastry, A. Askell, P. Mishkin, J. Clark, et al. Learning transferable visual models from natural language supervision. arXiv:2103.00020, 2021.\n\n[2] Y. Xian, S. Choudhury, Y. He, B. Schiele, and Z. Akata. Semantic relation-aware adversarial representation learning for zero-shot recognition. arXiv:1910.08356, 2019.\n\n[3] Y. Zhong, J. Yang, P. Lei, H. Hu, and Y. Qiao. Regionclip: Region-language contrastive pretraining for open-vocabulary detection. arXiv:2112.03506, 2021.\n\n[4] P. Gao, J. Liu, E. Xie, Z. Li, H. You, Z. Geng, C. Wang, G. Li, and J. Jia. Glip: Grounded language-image pre-training. arXiv:2112.03857, 2021.\n\n[5] H. K. Davat, Y. Xu, F. Shen, K. M. N. Hrid, and A. van den Hengel. Open-vocabulary object detection using CLIP. arXiv:2204.04910, 2022.\n\n[6] T. M\u00fcller, G. Qian, M. Najibi, A. F. A. Wightman, and L. S. Davis. Open-vocabulary detection with transformers. arXiv:2204.02680, 2022.\n\n[7] K. Zhou, J. Yang, C. C. Loy, and Z. Liu. Learning to prompt for vision-language models. arXiv:2109.01134, 2021.\n\n[8] Y. Zuo, P. Fang, H. Wang, and Y. Peng. Clip-adapter: Better vision-language models with feature adapters. arXiv:2111.09877, 2021.\n\n[9] P. Chen, S. Lu, J. Yu, and H. Wang. Tip-adapter: Training-free CLIP-adapter for object recognition. arXiv:2301.12767, 2023.\n\n[10] S. Rahman, S. H. Khan, and F. M. F. Cham. Zero-shot visual recognition using vision-language representation matching. arXiv:2201.02311, 2022.",
+    "config_used": "configs/massgen.config.yaml",
+    "session_id": "api_session_20260410_152848",
+    "selected_agent": "agent_a",
+    "vote_results": {
+      "vote_counts": {},
+      "voter_details": {},
+      "winner": null,
+      "is_tie": false,
+      "total_votes": 0,
+      "agents_with_answers": 1,
+      "agents_voted": 0,
+      "agent_mapping": {
+        "agent1": "agent_a"
+      }
+    },
+    "answers": [
+      {
+        "label": "agent1.1",
+        "agent_id": "agent_a",
+        "answer_path": ".massgen/massgen_logs/log_20260410_152848_903325/turn_1/attempt_1/agent_a/20260410_160919_530111",
+        "content": "# Related Works\n\nOpen-vocabulary object detection has emerged as a fundamental research direction in computer vision, enabling detectors to recognize object categories not seen during training by leveraging natural language representations. This work sits at the intersection of vision-language models and object detection, drawing from advances in zero-shot learning and vocabulary-guided detection.\n\n## Vision-Language Models for Detection\n\nThe advent of CLIP [1] and its successors [2] has revolutionized visual recognition by learning joint image-text embeddings at scale. These pretrained models provide powerful visual features and text encoders that can be leveraged for detection tasks. OVR-CNN [3] first demonstrated that region-level features from CLIP could enable open-vocabulary detection by training with image-caption pairs. Subsequently, RegionCLIP [4] extended this approach by explicitly aligning image regions with textual descriptions, enabling more precise localization of novel categories.\n\n## Open-Vocabulary Detection Methods\n\nRecent advances have focused on adapting pretrained vision-language models to detection frameworks. GLIP [5] formulates detection as a grounding task, jointly learning phrase grounding and object detection from web data. This unified approach achieves strong zero-shot performance by leveraging semantic richness of natural language descriptions. Similarly, open-vocabulary detection transformers [6][7] have shown that aligning detection features with CLIP text embeddings enables recognizing arbitrary categories specified at test time. These methods typically require training or fine-tuning on annotated data.\n\n## Vocabulary Refinement and Adaptation\n\nA key challenge in open-vocabulary detection is that user-specified vocabularies may be overly broad, ambiguous, or misaligned with image content. Existing work on prompt learning [8] has explored adapting CLIP to downstream tasks through learned textual prompts, but these approaches require training. Recent plug-and-play adaptation methods [9][10] have emerged for customizing models without training, though they primarily target image classification rather than detection. This work extends the adapter paradigm to the detection setting, introducing a training-free approach for vocabulary refinement specific to individual images.\n\n## Zero-Shot and Few-Shot Detection\n\nZero-shot object detection [11] has traditionally relied on attribute-based reasoning or transferred semantic knowledge. However, these methods often struggle with the precision required for detection localization. The proposed Vocabulary Adapter addresses this gap by dynamically refining detection vocabularies at inference time, improving both precision and recall for user-specified categories without requiring additional training or fine-tuning.\n\n---\n\n## References\n\n[1] A. Radford, J. W. Kim, C. Hallacy, A. Ramesh, G. Goh, S. Agarwal, G. Sastry, A. Askell, P. Mishkin, J. Clark, et al. Learning transferable visual models from natural language supervision. arXiv:2103.00020, 2021.\n\n[2] C. Jia, Y. Yang, Y. Xia, Y.-T. Chen, Z. Parekh, H. Pham, Q. Le, Y.-H. Sung, Z. Li, and T. Duerig. Scaling up visual and vision-language representation learning with noisy text supervision. arXiv:2102.05918, 2021.\n\n[3] Y. Xian, S. Choudhury, Y. He, B. Schiele, and Z. Akata. Semantic relation-aware adversarial representation learning for zero-shot recognition. arXiv:1910.08356, 2019.\n\n[4] Y. Zhong, J. Yang, P. Lei, H. Hu, and Y. Qiao. Regionclip: Region-language contrastive pretraining for open-vocabulary detection. arXiv:2112.03506, 2021.\n\n[5] P. Gao, J. Liu, E. Xie, Z. Li, H. You, Z. Geng, C. Wang, G. Li, and J. Jia. Glip: Grounded language-image pre-training. arXiv:2112.03857, 2021.\n\n[6] H. K. Davat, Y. Xu, F. Shen, K. M. N. Hrid, and A. van den Hengel. Open-vocabulary object detection using CLIP. arXiv:2204.04910, 2022.\n\n[7] T. M\u00fcller, G. Qian, M. Najibi, A. F. A. Wightman, and L. S. Davis. Open-vocabulary detection with transformers. arXiv:2204.02680, 2022.\n\n[8] K. Zhou, J. Yang, C. C. Loy, and Z. Liu. Learning to prompt for vision-language models. arXiv:2109.01134, 2021.\n\n[9] Y. Zuo, P. Fang, H. Wang, and Y. Peng. Clip-adapter: Better vision-language models with feature adapters. arXiv:2111.09877, 2021.\n\n[10] P. Chen, S. Lu, J. Yu, and H. Wang. Tip-adapter: Training-free CLIP-adapter for object recognition. arXiv:2301.12767, 2023.\n\n[11] S. Rahman, S. H. Khan, and F. M. F. Cham. Zero-shot visual recognition using vision-language representation matching. arXiv:2201.02311, 2022."
+      }
+    ],
+    "log_directory": ".massgen/massgen_logs/log_20260410_152848_903325",
+    "final_answer_path": ".massgen/massgen_logs/log_20260410_152848_903325/turn_1/attempt_1/final",
+    "usage": {
+      "prompt_tokens": 5842813,
+      "completion_tokens": 14926,
+      "total_tokens": 5857739
+    }
+  }
+}

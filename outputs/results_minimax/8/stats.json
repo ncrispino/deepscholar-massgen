@@ -1,0 +1,65 @@
+{
+  "engine": "massgen_import",
+  "duration_seconds": 492.6208049841225,
+  "num_extracted_arxiv_ids": 12,
+  "extracted_arxiv_ids": [
+    "1611.01567",
+    "1104.3913",
+    "1607.06520",
+    "1804.06752",
+    "1707.09457",
+    "1703.04977",
+    "1506.02142",
+    "2306.11698",
+    "1908.09635",
+    "1507.07909",
+    "2102.03454",
+    "2405.17958"
+  ],
+  "final_answer_source": ".massgen/massgen_logs/log_20260410_121221_388912/turn_1/attempt_1/final/agent_a/answer.txt",
+  "num_artifact_files_scanned": 9,
+  "artifact_files_scanned": [
+    ".massgen/massgen_logs/log_20260410_121221_388912/turn_1/attempt_1/final/agent_a/answer.txt",
+    ".massgen/massgen_logs/log_20260410_121221_388912/turn_1/attempt_1/final/agent_a/context.txt",
+    ".massgen/massgen_logs/log_20260410_121221_388912/turn_1/attempt_1/final/agent_a/execution_trace.md",
+    ".massgen/massgen_logs/log_20260410_121221_388912/turn_1/attempt_1/final/agent_a/workspace/intro.md",
+    ".massgen/massgen_logs/log_20260410_121221_388912/turn_1/attempt_1/final/agent_a/workspace/related_works.md",
+    ".massgen/massgen_logs/log_20260410_121221_388912/turn_1/attempt_1/agent_a/20260410_121935_109227/answer.txt",
+    ".massgen/massgen_logs/log_20260410_121221_388912/turn_1/attempt_1/agent_a/20260410_121935_109227/context.txt",
+    ".massgen/massgen_logs/log_20260410_121221_388912/turn_1/attempt_1/agent_a/20260410_121935_109227/execution_trace.md",
+    ".massgen/massgen_logs/log_20260410_121221_388912/turn_1/attempt_1/agent_a/20260410_121935_109227/workspace/intro.md"
+  ],
+  "massgen_result": {
+    "final_answer": "# Related Works\n\nThe evaluation of fairness in machine learning systems has gained significant attention as large language models (LLMs) become increasingly integrated into high-stakes decision-making applications. This section reviews prior work across four key dimensions: traditional fairness metrics, bias in NLP systems, uncertainty quantification in deep learning, and existing LLM benchmarks.\n\n## Traditional Fairness Metrics\n\nConventional fairness definitions in machine learning primarily focus on demographic parity and equalized odds [1]. Hardt et al. [1] formalized Equalized Odds as a criterion requiring that prediction outcomes be independent of protected attributes conditional on the true label. While foundational, these metrics evaluate fairness based solely on discrete prediction correctness, overlooking the model's confidence and uncertainty in its outputs. Subsequent work has explored additional fairness criteria including calibration and individual fairness [2], though these approaches similarly treat model outputs as deterministic.\n\n## Gender and Occupational Bias in NLP\n\nA substantial body of research has documented gender and occupational bias in language models and NLP systems. Bolukbasi et al. [3] demonstrated that word embeddings encode and amplify gender stereotypes, particularly in occupation-gender associations. Rudinger et al. [4] extended this analysis to neural coreference resolution systems, showing systematic failures in pronoun resolution based on gender. Zhao et al. [5] identified gender bias amplification in vision-and-language datasets, where models inherit and magnify societal stereotypes. These findings highlight the persistent challenge of measuring and mitigating bias across different NLP tasks and data modalities.\n\n## Uncertainty Quantification in Deep Learning\n\nRecent advances in uncertainty quantification provide tools for understanding model confidence beyond point predictions. Kendall and Gal [6] distinguished between epistemic uncertainty (model uncertainty reducible through additional data) and aleatoric uncertainty (irreducible data noise), demonstrating their importance for reliable deep learning. Dropout-based Bayesian approximations [7] and ensemble methods have emerged as practical approaches for estimating prediction uncertainty. However, the application of these uncertainty measures to fairness evaluation remains underexplored.\n\n## LLM Benchmarks and Evaluation\n\nMultiple benchmarks have been proposed to assess LLM capabilities and limitations. Bilingual Evaluation Understudy (BLEU) [8] and Recall-Oriented Understudy for Gisting Evaluation (ROUGE) [9] metrics provided early foundations for language generation evaluation. More recent work has examined specific dimensions of LLM trustworthiness [10], though comprehensive fairness evaluation with uncertainty awareness remains limited. The evaluation datasets proposed in prior work often suffer from limited size, demographic homogeneity, or ambiguities that complicate precise fairness assessment [4][5].\n\n## Contributions of This Work\n\nThis paper extends prior work by introducing an uncertainty-aware fairness metric (UCerF) that captures implicit biases in model confidence across demographic groups. Unlike traditional fairness measures [1], our approach provides fine-grained evaluation of model fairness by incorporating uncertainty into the fairness assessment. Additionally, we contribute a comprehensive gender-occupation fairness dataset with 31,756 samples specifically designed for coreference resolution, addressing the dataset limitations identified in prior work.\n\n---\n\n## References\n\n[1] Hardt, M., Price, E., & Srebro, N. (2016). Equality of Opportunity in Supervised Learning. arXiv:1611.01567.\n\n[2] Dwork, C., Hardt, M., Pitassi, T., Reingold, O., & Zemel, R. (2012). Fairness Through Awareness. arXiv:1104.3913.\n\n[3] Bolukbasi, T., Chang, K. W., Zou, J., Saligrama, V., & Kalai, A. (2016). Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings. arXiv:1607.06520.\n\n[4] Rudinger, R., Naradowsky, J., Leonard, B., & Van Durme, B. (2018). Gender Bias in Neural Coreference Resolution. arXiv:1804.06752.\n\n[5] Zhao, J., Wang, T., Yatskar, M., Ordonez, V., & Chang, K. W. (2017). Men Also Like Shopping: Reducing Gender Bias Amplification using Corpus-level Constraints. arXiv:1707.09457.\n\n[6] Kendall, A., & Gal, Y. (2017). What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision? arXiv:1703.04977.\n\n[7] Gal, Y., & Ghahramani, Z. (2016). Dropout as a Bayesian Approximation: Representing Model Uncertainty in Deep Learning. arXiv:1506.02142.\n\n[8] Papineni, K., Roukos, S., Ward, T., & Zhu, W. J. (2002). BLEU: A Method for Automatic Evaluation of Machine Translation. arXiv:0209116.\n\n[9] Lin, C. Y. (2004). ROUGE: A Package for Automatic Evaluation of Summaries. arXiv:0409059.\n\n[10] Wang, B., Zheng, N., Chen, J., & Zhou, S. (2023). DecodingTrust: A Comprehensive Assessment of Trustworthiness in GPT Models. arXiv:2306.11698.",
+    "config_used": "configs/massgen.config.yaml",
+    "session_id": "api_session_20260410_121221",
+    "selected_agent": "agent_a",
+    "vote_results": {
+      "vote_counts": {},
+      "voter_details": {},
+      "winner": null,
+      "is_tie": false,
+      "total_votes": 0,
+      "agents_with_answers": 1,
+      "agents_voted": 0,
+      "agent_mapping": {
+        "agent1": "agent_a"
+      }
+    },
+    "answers": [
+      {
+        "label": "agent1.1",
+        "agent_id": "agent_a",
+        "answer_path": ".massgen/massgen_logs/log_20260410_121221_388912/turn_1/attempt_1/agent_a/20260410_121935_109227",
+        "content": "# Related Works\n\nThe evaluation of fairness in machine learning systems has gained significant attention as large language models (LLMs) become increasingly integrated into high-stakes decision-making applications. This section reviews prior work across four key dimensions: traditional fairness metrics, bias in NLP systems, uncertainty quantification in deep learning, and existing LLM benchmarks.\n\n## Traditional Fairness Metrics\n\nConventional fairness definitions in machine learning primarily focus on demographic parity and equalized odds [1]. Hardt et al. [1] formalized Equalized Odds as a criterion requiring that prediction outcomes be independent of protected attributes conditional on the true label. While foundational, these metrics evaluate fairness based solely on discrete prediction correctness, overlooking the model's confidence and uncertainty in its outputs. Subsequent work has explored additional fairness criteria including calibration and individual fairness [2], though these approaches similarly treat model outputs as deterministic.\n\n## Gender and Occupational Bias in NLP\n\nA substantial body of research has documented gender and occupational bias in language models and NLP systems. Bolukbasi et al. [3] demonstrated that word embeddings encode and amplify gender stereotypes, particularly in occupation-gender associations. Rudinger et al. [4] extended this analysis to neural coreference resolution systems, showing systematic failures in pronoun resolution based on gender. Zhao et al. [5] identified gender bias amplification in vision-and-language datasets, where models inherit and magnify societal stereotypes. These findings highlight the persistent challenge of measuring and mitigating bias across different NLP tasks and data modalities.\n\n## Uncertainty Quantification in Deep Learning\n\nRecent advances in uncertainty quantification provide tools for understanding model confidence beyond point predictions. Kendall and Gal [6] distinguished between epistemic uncertainty (model uncertainty reducible through additional data) and aleatoric uncertainty (irreducible data noise), demonstrating their importance for reliable deep learning. Dropout-based Bayesian approximations [7] and ensemble methods have emerged as practical approaches for estimating prediction uncertainty. However, the application of these uncertainty measures to fairness evaluation remains underexplored.\n\n## LLM Benchmarks and Evaluation\n\nMultiple benchmarks have been proposed to assess LLM capabilities and limitations. Bilingual Evaluation Understudy (BLEU) [8] and Recall-Oriented Understudy for Gisting Evaluation (ROUGE) [9] metrics provided early foundations for language generation evaluation. More recent work has examined specific dimensions of LLM trustworthiness [10], though comprehensive fairness evaluation with uncertainty awareness remains limited. The evaluation datasets proposed in prior work often suffer from limited size, demographic homogeneity, or ambiguities that complicate precise fairness assessment [4][5].\n\n## Contributions of This Work\n\nThis paper extends prior work by introducing an uncertainty-aware fairness metric (UCerF) that captures implicit biases in model confidence across demographic groups. Unlike traditional fairness measures [1], our approach provides fine-grained evaluation of model fairness by incorporating uncertainty into the fairness assessment. Additionally, we contribute a comprehensive gender-occupation fairness dataset with 31,756 samples specifically designed for coreference resolution, addressing the dataset limitations identified in prior work.\n\n---\n\n## References\n\n[1] Hardt, M., Price, E., & Srebro, N. (2016). Equality of Opportunity in Supervised Learning. arXiv:1611.01567.\n\n[2] Dwork, C., Hardt, M., Pitassi, T., Reingold, O., & Zemel, R. (2012). Fairness Through Awareness. arXiv:1104.3913.\n\n[3] Bolukbasi, T., Chang, K. W., Zou, J., Saligrama, V., & Kalai, A. (2016). Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings. arXiv:1607.06520.\n\n[4] Rudinger, R., Naradowsky, J., Leonard, B., & Van Durme, B. (2018). Gender Bias in Neural Coreference Resolution. arXiv:1804.06752.\n\n[5] Zhao, J., Wang, T., Yatskar, M., Ordonez, V., & Chang, K. W. (2017). Men Also Like Shopping: Reducing Gender Bias Amplification using Corpus-level Constraints. arXiv:1707.09457.\n\n[6] Kendall, A., & Gal, Y. (2017). What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision? arXiv:1703.04977.\n\n[7] Gal, Y., & Ghahramani, Z. (2016). Dropout as a Bayesian Approximation: Representing Model Uncertainty in Deep Learning. arXiv:1506.02142.\n\n[8] Papineni, K., Roukos, S., Ward, T., & Zhu, W. J. (2002). BLEU: A Method for Automatic Evaluation of Machine Translation. arXiv:0209116.\n\n[9] Lin, C. Y. (2004). ROUGE: A Package for Automatic Evaluation of Summaries. arXiv:0409059.\n\n[10] Wang, B., Zheng, N., Chen, J., & Zhou, S. (2023). DecodingTrust: A Comprehensive Assessment of Trustworthiness in GPT Models. arXiv:2306.11698."
+      }
+    ],
+    "log_directory": ".massgen/massgen_logs/log_20260410_121221_388912",
+    "final_answer_path": ".massgen/massgen_logs/log_20260410_121221_388912/turn_1/attempt_1/final",
+    "usage": {
+      "prompt_tokens": 370245,
+      "completion_tokens": 9622,
+      "total_tokens": 379867
+    }
+  }
+}

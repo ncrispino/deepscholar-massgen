@@ -240,21 +240,49 @@ def _read_final_answer_from_result_paths(result: dict[str, Any]) -> tuple[str, s
         text = str(result.get("final_answer", "") or "")
         return text, "massgen_result.final_answer"
 
-    candidate_files: list[Path] = []
+    # Two passes: first prefer the canonical workspace `intro.md` (per the
+    # agent system message) but only if it has substantial content. The
+    # agent sometimes leaves intro.md as a tiny stub (e.g. a leftover
+    # comment) while writing the real Related Works into answer.txt, and
+    # other times the reverse — answer.txt contains only narration while
+    # intro.md is the real deliverable. Falling back to a non-empty check
+    # alone picks the wrong file in either edge case.
+    MIN_DELIVERABLE_BYTES = 500
+
+    primary_candidates: list[Path] = []
+    fallback_candidates: list[Path] = []
     if path.is_file():
-        candidate_files.append(path)
+        primary_candidates.append(path)
     else:
         if selected_agent and isinstance(selected_agent, str):
-            selected = path / selected_agent / "answer.txt"
-            if selected.exists():
-                candidate_files.append(selected)
-        candidate_files.extend(path.rglob("answer.txt"))
-        candidate_files.extend(path.rglob("final_report.md"))
-        candidate_files.extend(path.rglob("intro.md"))
-        candidate_files.extend(path.rglob("*.md"))
-        candidate_files.extend(path.rglob("*.txt"))
+            selected_intro = path / selected_agent / "workspace" / "intro.md"
+            if selected_intro.exists():
+                primary_candidates.append(selected_intro)
+            selected_answer = path / selected_agent / "answer.txt"
+            if selected_answer.exists():
+                primary_candidates.append(selected_answer)
+        primary_candidates.extend(path.rglob("intro.md"))
+        primary_candidates.extend(path.rglob("final_report.md"))
+        primary_candidates.extend(path.rglob("answer.txt"))
+        fallback_candidates.extend(path.rglob("*.md"))
+        fallback_candidates.extend(path.rglob("*.txt"))
 
-    for candidate in candidate_files:
+    # Pass 1: prefer candidates that meet the deliverable size threshold,
+    # in priority order.
+    for candidate in primary_candidates:
+        text = _safe_read_text(candidate)
+        if len(text.strip()) >= MIN_DELIVERABLE_BYTES:
+            return text, str(candidate)
+
+    # Pass 2: accept any non-empty primary candidate (handles short
+    # legitimate outputs).
+    for candidate in primary_candidates:
+        text = _safe_read_text(candidate)
+        if text.strip():
+            return text, str(candidate)
+
+    # Pass 3: last-resort fallback to any markdown/text file.
+    for candidate in fallback_candidates:
         text = _safe_read_text(candidate)
         if text.strip():
             return text, str(candidate)

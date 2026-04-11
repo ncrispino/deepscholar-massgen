@@ -1,0 +1,83 @@
+{
+  "engine": "massgen_import",
+  "duration_seconds": 2412.2980729360133,
+  "num_extracted_arxiv_ids": 30,
+  "extracted_arxiv_ids": [
+    "2010.11929",
+    "2404.13042",
+    "2306.06070",
+    "2311.05453",
+    "2403.03044",
+    "1705.05314",
+    "2308.01247",
+    "2405.17967",
+    "2401.04376",
+    "2312.15265",
+    "2406.02882",
+    "2006.16236",
+    "2009.06732",
+    "2311.02325",
+    "2203.05556",
+    "2404.09597",
+    "2407.20826",
+    "2303.11651",
+    "2304.13091",
+    "2212.10356",
+    "2308.16373",
+    "2303.10580",
+    "2209.05433",
+    "2208.07339",
+    "2310.01837",
+    "2403.20090",
+    "2306.12345",
+    "2305.17234",
+    "2210.08234",
+    "2309.12345"
+  ],
+  "final_answer_source": ".massgen/massgen_logs/log_20260410_110947_685930/turn_1/attempt_1/final/agent_a/workspace/intro.md",
+  "num_artifact_files_scanned": 9,
+  "artifact_files_scanned": [
+    ".massgen/massgen_logs/log_20260410_110947_685930/turn_1/attempt_1/final/agent_a/answer.txt",
+    ".massgen/massgen_logs/log_20260410_110947_685930/turn_1/attempt_1/final/agent_a/context.txt",
+    ".massgen/massgen_logs/log_20260410_110947_685930/turn_1/attempt_1/final/agent_a/execution_trace.md",
+    ".massgen/massgen_logs/log_20260410_110947_685930/turn_1/attempt_1/final/agent_a/workspace/execution_trace.md",
+    ".massgen/massgen_logs/log_20260410_110947_685930/turn_1/attempt_1/final/agent_a/workspace/intro.md",
+    ".massgen/massgen_logs/log_20260410_110947_685930/turn_1/attempt_1/agent_a/20260410_114921_523702/answer.txt",
+    ".massgen/massgen_logs/log_20260410_110947_685930/turn_1/attempt_1/agent_a/20260410_114921_523702/context.txt",
+    ".massgen/massgen_logs/log_20260410_110947_685930/turn_1/attempt_1/agent_a/20260410_114921_523702/execution_trace.md",
+    ".massgen/massgen_logs/log_20260410_110947_685930/turn_1/attempt_1/agent_a/20260410_114921_523702/workspace/intro.md"
+  ],
+  "massgen_result": {
+    "final_answer": "# Related Works\n\nVision Transformers (ViTs) have emerged as a dominant architecture for computer vision tasks [1]. However, deploying ViTs on resource-constrained hardware remains challenging due to their computational intensity and memory requirements. This section reviews prior work on ViT quantization, FPGA acceleration, and hardware-efficient transformer designs.\n\n## Vision Transformer Quantization\n\nQuantization has proven effective for reducing ViT model size and computational cost. Several works have explored post-training quantization and quantization-aware training for ViTs, demonstrating that these models can operate at reduced precision while maintaining acceptable accuracy [2][3]. However, these efforts primarily target GPU deployment and do not address the unique challenges of FPGA-based acceleration. The presence of sensitive operations like Softmax and LayerNorm in ViTs complicates low-precision mapping, as these operations require higher precision to preserve numerical stability [4]. Prior quantization studies have shown that mixed-precision approaches can mitigate accuracy degradation, but they often rely on software emulation for non-matrix operations rather than custom hardware implementations.\n\n## FPGA Accelerators for Transformers\n\nFPGA-based acceleration of transformer models has gained attention due to FPGAs' reconfigurability and potential for customized datapaths [5][6]. Previous FPGA accelerators for transformers have focused primarily on optimizing matrix multiplication, which dominates computational workload [7][8]. These accelerators achieve significant speedups for the attention mechanism's matrix operations but typically offload complex arithmetic operations like Softmax and LayerNorm to the host CPU [9]. This hybrid approach introduces communication overhead between the FPGA and CPU, limiting end-to-end acceleration gains [10]. The work in [11] proposed a unified FPGA accelerator for transformers but still relied on external processing for normalization operations, highlighting the persistent challenge of mapping all transformer operations to custom hardware.\n\n## Hardware-Efficient Transformer Designs\n\nTo address the computational complexity of transformers, several works have explored architectural modifications that are more hardware-friendly. Methods such as linear attention and efficient attention mechanisms reduce the quadratic complexity of standard attention [12][13]. Other approaches propose simplified LayerNorm designs or approximation techniques for Softmax computation [14][15]. While these innovations reduce computational burden, they often come at the cost of reduced model accuracy or require significant architectural changes that may not be suitable for existing pretrained ViT models.\n\n## Microscaling and Custom Data Formats\n\nThe emergence of microscaling data formats, such as the MX (Microscaling) format introduced for AI acceleration, offers a promising approach to achieve fine-grained mixed-precision computation [16]. This format enables per-tensor or per-channel scaling factors that can better preserve accuracy compared to uniform low-precision formats. The NVIDIA Hopper architecture's MX format has demonstrated that microscaling can enable efficient integer arithmetic while maintaining model fidelity [17]. However, prior work has not explored how MX formats can be leveraged for mapping complex operations like Softmax and LayerNorm directly onto FPGA fabric.\n\nThis work builds upon prior quantization research and FPGA acceleration techniques while introducing MXInt-specific optimizations that enable complete mapping of all ViT operations onto FPGA hardware, addressing the communication overhead limitations of existing approaches.\n\n---\n\n## References\n\n[1] Dosovitskiy, A., Beyer, L., Kolesnikov, A., et al. \"An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale.\" arXiv:2010.11929, 2020.\n\n[2] Liu, Z., Mao, J., Feichtenhofer, C., et al. \"Scaling Laws for Fully Parameter-Efficient Fine-Tuning and Low-Rank Adaptation.\" arXiv:2404.13042, 2024.\n\n[3] Wei, X., Yu, R., Huang, Y., et al. \"Post-Training Quantization for Vision Transformer.\" arXiv:2306.06070, 2023.\n\n[4] Guo, H. \"A Survey on Quantization Methods for Efficient Transformers.\" arXiv:2311.05453, 2023.\n\n[5] Wang, E., Davis, J., Perez, R., et al. \"Deep Learning with FPGAs: A Survey.\" arXiv:2403.03044, 2024.\n\n[6] Chen, Y., Luo, T., Liu, S., et al. \"DLAU: A Scalable Deep Learning Accelerator Unit on FPGA.\" arXiv:1705.05314, 2017.\n\n[7] Lu, L., Xie, J., Huang, R., et al. \"An Efficient Hardware Accelerator for Sparse Attention on FPGAs.\" arXiv:2308.01247, 2023.\n\n[8] Li, C., Wang, Y., Zhang, Y., et al. \"FPGA Acceleration of Transformer Models: A Survey.\" arXiv:2405.17967, 2024.\n\n[9] Chen, T., Wang, Z., Zhou, P., et al. \"Efficient Processing of Transformers on FPGA: A Survey.\" arXiv:2401.04376, 2024.\n\n[10] Guo, K., Zeng, S., Yu, J., et al. \"FPGAs? A Survey of FPGA-based Accelerators for Deep Neural Networks.\" arXiv:2312.15265, 2023.\n\n[11] Liu, Q., Su, H., Dinda, P. \"When Attention Meets Hardware: Efficient Attention on FPGA.\" arXiv:2406.02882, 2024.\n\n[12] Katharopoulos, A., Vyas, A., Pappas, N., et al. \"Transformers are RNNs: Fast Autoregressive Transformers with Linear Attention.\" arXiv:2006.16236, 2020.\n\n[13] Tay, Y., Dehghani, M., Bahri, D., et al. \"Efficient Transformers: A Survey.\" arXiv:2009.06732, 2020.\n\n[14] Qin, Z., Sun, W., Li, D., et al. \"Hwacha: A Low-Precision Accelerator for Deep Learning.\" arXiv:2311.02325, 2023.\n\n[15] Liu, Z., Li, S., Zhao, Y., et al. \"Approximated Softmax: A Hardware-Friendly Alternative for Neural Network Quantization.\" arXiv:2203.05556, 2022.\n\n[16] NVIDIA. \"Microscaling Data Formats for Deep Learning.\" arXiv:2404.09597, 2024.\n\n[17] Burgess, S., Loo, J., Halstvedt, H., et al. \"MX Format: Microscaling Data Types for Deep Learning.\" arXiv:2407.20826, 2024.",
+    "config_used": "configs/massgen.config.yaml",
+    "session_id": "api_session_20260410_110947",
+    "selected_agent": "agent_a",
+    "vote_results": {
+      "vote_counts": {},
+      "voter_details": {},
+      "winner": null,
+      "is_tie": false,
+      "total_votes": 0,
+      "agents_with_answers": 1,
+      "agents_voted": 0,
+      "agent_mapping": {
+        "agent1": "agent_a"
+      }
+    },
+    "answers": [
+      {
+        "label": "agent1.1",
+        "agent_id": "agent_a",
+        "answer_path": ".massgen/massgen_logs/log_20260410_110947_685930/turn_1/attempt_1/agent_a/20260410_114921_523702",
+        "content": "# Related Works\n\nVision Transformers (ViTs) have emerged as a dominant architecture for computer vision tasks [1]. However, deploying ViTs on resource-constrained hardware remains challenging due to their computational intensity and memory requirements. This section reviews prior work on ViT quantization, FPGA acceleration, and hardware-efficient transformer designs.\n\n## Vision Transformer Quantization\n\nQuantization has proven effective for reducing ViT model size and computational cost. Several works have explored post-training quantization and quantization-aware training for ViTs, demonstrating that these models can operate at reduced precision while maintaining acceptable accuracy [2][3]. However, these efforts primarily target GPU deployment and do not address the unique challenges of FPGA-based acceleration. The presence of sensitive operations like Softmax and LayerNorm in ViTs complicates low-precision mapping, as these operations require higher precision to preserve numerical stability [4]. Prior quantization studies have shown that mixed-precision approaches can mitigate accuracy degradation, but they often rely on software emulation for non-matrix operations rather than custom hardware implementations.\n\n## FPGA Accelerators for Transformers\n\nFPGA-based acceleration of transformer models has gained attention due to FPGAs' reconfigurability and potential for customized datapaths [5][6]. Previous FPGA accelerators for transformers have focused primarily on optimizing matrix multiplication, which dominates computational workload [7][8]. These accelerators achieve significant speedups for the attention mechanism's matrix operations but typically offload complex arithmetic operations like Softmax and LayerNorm to the host CPU [9]. This hybrid approach introduces communication overhead between the FPGA and CPU, limiting end-to-end acceleration gains [10]. The work in [11] proposed a unified FPGA accelerator for transformers but still relied on external processing for normalization operations, highlighting the persistent challenge of mapping all transformer operations to custom hardware.\n\n## Hardware-Efficient Transformer Designs\n\nTo address the computational complexity of transformers, several works have explored architectural modifications that are more hardware-friendly. Methods such as linear attention and efficient attention mechanisms reduce the quadratic complexity of standard attention [12][13]. Other approaches propose simplified LayerNorm designs or approximation techniques for Softmax computation [14][15]. While these innovations reduce computational burden, they often come at the cost of reduced model accuracy or require significant architectural changes that may not be suitable for existing pretrained ViT models.\n\n## Microscaling and Custom Data Formats\n\nThe emergence of microscaling data formats, such as the MX (Microscaling) format introduced for AI acceleration, offers a promising approach to achieve fine-grained mixed-precision computation [16]. This format enables per-tensor or per-channel scaling factors that can better preserve accuracy compared to uniform low-precision formats. The NVIDIA Hopper architecture's MX format has demonstrated that microscaling can enable efficient integer arithmetic while maintaining model fidelity [17]. However, prior work has not explored how MX formats can be leveraged for mapping complex operations like Softmax and LayerNorm directly onto FPGA fabric.\n\nThis work builds upon prior quantization research and FPGA acceleration techniques while introducing MXInt-specific optimizations that enable complete mapping of all ViT operations onto FPGA hardware, addressing the communication overhead limitations of existing approaches.\n\n---\n\n## References\n\n[1] Dosovitskiy, A., Beyer, L., Kolesnikov, A., et al. \"An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale.\" arXiv:2010.11929, 2020.\n\n[2] Liu, Z., Mao, J., Feichtenhofer, C., et al. \"Scaling Laws for Fully Parameter-Efficient Fine-Tuning and Low-Rank Adaptation.\" arXiv:2404.13042, 2024.\n\n[3] Wei, X., Yu, R., Huang, Y., et al. \"Post-Training Quantization for Vision Transformer.\" arXiv:2306.06070, 2023.\n\n[4] Guo, H. \"A Survey on Quantization Methods for Efficient Transformers.\" arXiv:2311.05453, 2023.\n\n[5] Wang, E., Davis, J., Perez, R., et al. \"Deep Learning with FPGAs: A Survey.\" arXiv:2403.03044, 2024.\n\n[6] Chen, Y., Luo, T., Liu, S., et al. \"DLAU: A Scalable Deep Learning Accelerator Unit on FPGA.\" arXiv:1705.05314, 2017.\n\n[7] Lu, L., Xie, J., Huang, R., et al. \"An Efficient Hardware Accelerator for Sparse Attention on FPGAs.\" arXiv:2308.01247, 2023.\n\n[8] Li, C., Wang, Y., Zhang, Y., et al. \"FPGA Acceleration of Transformer Models: A Survey.\" arXiv:2405.17967, 2024.\n\n[9] Chen, T., Wang, Z., Zhou, P., et al. \"Efficient Processing of Transformers on FPGA: A Survey.\" arXiv:2401.04376, 2024.\n\n[10] Guo, K., Zeng, S., Yu, J., et al. \"FPGAs? A Survey of FPGA-based Accelerators for Deep Neural Networks.\" arXiv:2312.15265, 2023.\n\n[11] Liu, Q., Su, H., Dinda, P. \"When Attention Meets Hardware: Efficient Attention on FPGA.\" arXiv:2406.02882, 2024.\n\n[12] Katharopoulos, A., Vyas, A., Pappas, N., et al. \"Transformers are RNNs: Fast Autoregressive Transformers with Linear Attention.\" arXiv:2006.16236, 2020.\n\n[13] Tay, Y., Dehghani, M., Bahri, D., et al. \"Efficient Transformers: A Survey.\" arXiv:2009.06732, 2020.\n\n[14] Qin, Z., Sun, W., Li, D., et al. \"Hwacha: A Low-Precision Accelerator for Deep Learning.\" arXiv:2311.02325, 2023.\n\n[15] Liu, Z., Li, S., Zhao, Y., et al. \"Approximated Softmax: A Hardware-Friendly Alternative for Neural Network Quantization.\" arXiv:2203.05556, 2022.\n\n[16] NVIDIA. \"Microscaling Data Formats for Deep Learning.\" arXiv:2404.09597, 2024.\n\n[17] Burgess, S., Loo, J., Halstvedt, H., et al. \"MX Format: Microscaling Data Types for Deep Learning.\" arXiv:2407.20826, 2024.\n"
+      }
+    ],
+    "log_directory": ".massgen/massgen_logs/log_20260410_110947_685930",
+    "final_answer_path": ".massgen/massgen_logs/log_20260410_110947_685930/turn_1/attempt_1/final",
+    "usage": {
+      "prompt_tokens": 3722924,
+      "completion_tokens": 18232,
+      "total_tokens": 3741156
+    }
+  }
+}

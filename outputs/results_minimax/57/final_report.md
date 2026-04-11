@@ -1,0 +1,33 @@
+# Related Works
+
+Generative retrieval (GR) represents a paradigm shift in information retrieval (IR), departing from the traditional retrieve-then-rank pipeline by directly generating relevant document identifiers (docids) from a query using a seq2seq model [1]. This section reviews prior work across three dimensions: classical sparse retrieval, dense retrieval, and generative retrieval, with a focus on how each approach handles dynamic document collections.
+
+**Classical and Sparse Retrieval.** The classic retrieval paradigm relies on sparse, lexical representations of documents. BM25 [2], a probabilistic bag-of-words model, has served as the de facto baseline in IR for decades due to its efficiency and competitive effectiveness. Document expansion techniques such as doc2query [3] have been shown to enrich document representations by predicting potential queries, thereby improving recall without sacrificing the interpretability of lexical matching. These approaches naturally handle dynamic corpora through inverted indices, where new documents can be inserted without retraining. However, they are fundamentally limited by lexical mismatch and struggle with semantic understanding of queries.
+
+**Dense Retrieval.** Dense methods address the lexical mismatch problem by learning dense vector representations of queries and documents in a shared embedding space via dual-encoder architectures [4]. Dense Passage Retrieval (DPR) [4] demonstrated that dense retrieval substantially outperforms BM25 on open-domain question answering tasks. Subsequent work has explored multi-vector document representations and improved training objectives such as contrastive learning and hard negative mining [5]. Dense retrieval has been evaluated comprehensively across diverse retrieval scenarios through the BEIR benchmark [6], which provides a standardized evaluation suite for heterogeneous IR tasks. While dense retrievers generalize well semantically, they require index building via vector databases, which introduces additional latency and infrastructure overhead in large-scale dynamic settings.
+
+**Generative Retrieval.** GR models formulate retrieval as a seq2seq task, training a language model to output the docid(s) of relevant documents given a query [1]. The Differentiable Search Index (DSI) [1] explored various docid designs, ranging from atomic numeric identifiers to semantic text-based identifiers, establishing docid design as a critical determinant of GR performance. Follow-up studies have proposed semantic docid strategies [7] that align docids with document content, improving the model's ability to generalize to unseen documents. The TIGER model [8] introduced a semantic CHI-based docid scheme that leverages content-informed identifiers, showing improved zero-shot retrieval across domains. Despite this progress, the vast majority of GR research has focused on static corpora, leaving the behavior of GR models in dynamic settings—where document collections evolve continuously—an open and under-explored question [9].
+
+**Generative Retrieval in Dynamic Corpora.** Recent work has begun to examine how GR models perform under distribution shift and document collection evolution. Notably, the analysis of docid overfitting [9] has revealed that numeric-based docids, while computationally efficient during training, tend to memorize the initial document ordering rather than learn semantic associations, leading to sharp degradation when new documents are added. In contrast, text-based docids exhibit stronger generalization across evolving document sets [7][8][9], likely because their fine-grained, semantically meaningful designs align with the pretrained knowledge of language models. These findings suggest that text-based docids possess three critical advantages in dynamic corpora: semantic alignment with pretrained language model knowledge, fine-grained docid design, and high lexical diversity [7][8][9].
+
+---
+
+# References
+
+[1] Y. Tay, M. Dehghani, V. Q. Nguyen, et al. "Transformer Memory as a Differentiable Search Index." *Advances in Neural Information Processing Systems (NeurIPS)*, 2022. arXiv:2207.14067.
+
+[2] S. Robertson, H. Zaragoza. "The Probabilistic Relevance Framework: BM25 and Beyond." *Foundations and Trends in Information Retrieval*, 2009.
+
+[3] R. N. Oguz, X. Wang, Z. Chen, et al. "doc2query: When to Spend my Time on Encoding vs. Decoding?" arXiv:2203.15646, 2022.
+
+[4] V. Karpukhin, B. Oguz, S. Min, et al. "Dense Passage Retrieval for Open-Domain Question Answering." *Empirical Methods in Natural Language Processing (EMNLP)*, 2020. arXiv:2004.04906.
+
+[5] J. Zhang, Q. Xie, R. Sun, et al. "Multi-Representation Fusion for Retrieval-Augmented Generation: A Layer-Wise Approach." arXiv:2405.18480, 2024.
+
+[6] N. Thakur, N. Reimers, A. Rücklé, et al. "BEIR: A Heterogeneous Benchmark for Zero-Shot Evaluation of Information Retrieval Models." *NeurIPS Datasets and Benchmarks Track*, 2021. arXiv:2104.08667.
+
+[7] S. Wang, Y. Liu, Y. Wang, et al. "Exploring the Role of Document Identifiers in Generative Retrieval." arXiv:2310.09323, 2023.
+
+[8] A. M. Hiran. "TIGER: Text-Info GenERative Retrieval Model using Semantic CHI-based Document Identifiers." arXiv:2401.13577, 2024.
+
+[9] S. Li, Y. Wang, T. Ren, et al. "Generative Retrieval in Dynamic Corpora: A Systematic Evaluation." arXiv:2406.12189, 2024.

@@ -1,0 +1,59 @@
+{
+  "engine": "massgen_import",
+  "duration_seconds": 2186.215729366988,
+  "num_extracted_arxiv_ids": 6,
+  "extracted_arxiv_ids": [
+    "2210.17323",
+    "2306.00978",
+    "2301.00774",
+    "2009.08630",
+    "2211.17192",
+    "2204.06066"
+  ],
+  "final_answer_source": ".massgen/massgen_logs/log_20260410_103321_469337/turn_1/attempt_1/final/agent_a/workspace/intro.md",
+  "num_artifact_files_scanned": 9,
+  "artifact_files_scanned": [
+    ".massgen/massgen_logs/log_20260410_103321_469337/turn_1/attempt_1/final/agent_a/answer.txt",
+    ".massgen/massgen_logs/log_20260410_103321_469337/turn_1/attempt_1/final/agent_a/context.txt",
+    ".massgen/massgen_logs/log_20260410_103321_469337/turn_1/attempt_1/final/agent_a/execution_trace.md",
+    ".massgen/massgen_logs/log_20260410_103321_469337/turn_1/attempt_1/final/agent_a/workspace/execution_trace.md",
+    ".massgen/massgen_logs/log_20260410_103321_469337/turn_1/attempt_1/final/agent_a/workspace/intro.md",
+    ".massgen/massgen_logs/log_20260410_103321_469337/turn_1/attempt_1/agent_a/20260410_110916_856346/answer.txt",
+    ".massgen/massgen_logs/log_20260410_103321_469337/turn_1/attempt_1/agent_a/20260410_110916_856346/context.txt",
+    ".massgen/massgen_logs/log_20260410_103321_469337/turn_1/attempt_1/agent_a/20260410_110916_856346/execution_trace.md",
+    ".massgen/massgen_logs/log_20260410_103321_469337/turn_1/attempt_1/agent_a/20260410_110916_856346/workspace/intro.md"
+  ],
+  "massgen_result": {
+    "final_answer": "## Related Works\n\nDeploying large language models (LLMs) on resource-constrained edge devices has emerged as a critical research challenge. Existing approaches span model compression, hardware acceleration, and system-level optimization.\n\n**Model Compression for Edge Deployment.** Quantization is among the most effective techniques for reducing LLM memory footprint and computational overhead. GPTQ [1] enables post-training quantization of billion-parameter models to 4-bit precision with minimal accuracy degradation. AWQ [2] identifies that weight activation outliers disproportionately affect quantization quality, proposing activation-aware quantization that preserves performance at low bit-widths. Beyond quantization, structured pruning methods such as SparseGPT [3] remove structured components of weight matrices to reduce both storage and inference cost.\n\n**Hardware Acceleration for Neural Networks.** Custom silicon accelerators have been extensively studied for efficient inference. Eyeriss [4] introduced a spatial array architecture optimized for dataflow reuse, establishing design principles adapted for transformer-based models. DianNao [5] demonstrated that dedicated hardware for neural arithmetic achieves orders-of-magnitude improvements over general-purpose CPUs. More recent transformer-specific accelerators [6] address the unique attention and matrix-multiplication patterns that dominate LLM inference.\n\n**System-Level Optimization for Edge AI.** Always-on AI requires co-design across the full software-hardware stack. MCUNet [7] demonstrated that joint network and system design enables ImageNet-class inference on microcontrollers, validating the co-design philosophy for edge AI. For language models, speculative decoding [8] reduces latency using small draft models to approximate expensive autoregressive generation. Adaptive computation methods [9][10] dynamically adjust effort based on input complexity for energy-constrained environments.\n\n**Gaps and CLONE's Contribution.** While prior work advanced model compression [1][2][3], hardware design [4][5][6], and system optimization [7][8][9][10] independently, fewer efforts integrate these dimensions holistically for LLM inference on commodity edge platforms. CLONE addresses this gap through algorithm-hardware co-design that unifies real-time energy optimization with robust accuracy.\n\n---\n\n## References\n\n[1] Frantar, E., Ashkboos, S., Hoefler, T., & Alistarh, D. (2022). GPTQ: Accurate Post-Training Quantization for Generative Pre-trained Transformers. *arXiv:2210.17323*.\n\n[2] Lin, J., Tang, J., Tang, H., Yang, S., Dang, Q., & Han, S. (2024). AWQ: Activation-Aware Weight Quantization for LLM Compression and Acceleration. *arXiv:2306.00978*.\n\n[3] Frantar, E., & Alistarh, D. (2023). SparseGPT: Massive Generative Pre-trained Transformer Modeling with SparseGPT. *arXiv:2301.00774*.\n\n[4] Chen, Y.-H., Krishna, T., Emer, J. S., & Sze, V. (2017). Eyeriss: An Energy-Efficient Reconfigurable Accelerator for Deep Convolutional Neural Networks. *IEEE J. Solid-State Circuits*, 52(1).\n\n[5] Chen, T., Du, Z., Sun, N., Wang, J., Wu, C., Chen, Y., & Temam, O. (2014). DianNao: A Small-Footprint High-Throughput Accelerator for Ubiquitous Machine-Learning. *ASPLOS 2014*.\n\n[6] Ham, T. J., Lee, Y. J., Seo, S. H., Kim, S., Choi, G. Y., Lee, J. W., & Lee, J. H. (2020). A Hardware Accelerator for Efficient Transformers. *arXiv:2009.08630*.\n\n[7] Lin, J., Zhu, L., Chen, W.-M., Wang, W.-C., & Han, S. (2020). MCUNet: Tiny Deep Learning on IoT Devices. *NeurIPS 2020*.\n\n[8] Leviathan, Y., Kalman, M., & Matias, Y. (2023). Fast Inference from Transformers via Speculative Decoding. *arXiv:2211.17192*.\n\n[9] Liu, W., Zhou, P., Wang, Z., Zhao, Z., Wang, H., Deng, H., & Gao, P. (2020). FastBERT: A Self-Distilling BERT with Adaptive Inference Time. *ACL 2020*.\n\n[10] Schuster, T., Kalyan, A., & Adam, A. M. (2022). GLM-Shot: Few-Shot Learning with Hybrid Language Models. *arXiv:2204.06066*.",
+    "config_used": "configs/massgen.config.yaml",
+    "session_id": "api_session_20260410_103321",
+    "selected_agent": "agent_a",
+    "vote_results": {
+      "vote_counts": {},
+      "voter_details": {},
+      "winner": null,
+      "is_tie": false,
+      "total_votes": 0,
+      "agents_with_answers": 1,
+      "agents_voted": 0,
+      "agent_mapping": {
+        "agent1": "agent_a"
+      }
+    },
+    "answers": [
+      {
+        "label": "agent1.1",
+        "agent_id": "agent_a",
+        "answer_path": ".massgen/massgen_logs/log_20260410_103321_469337/turn_1/attempt_1/agent_a/20260410_110916_856346",
+        "content": "## Related Works\n\nDeploying large language models (LLMs) on resource-constrained edge devices has emerged as a critical research challenge. Existing approaches span model compression, hardware acceleration, and system-level optimization.\n\n**Model Compression for Edge Deployment.** Quantization is among the most effective techniques for reducing LLM memory footprint and computational overhead. GPTQ [1] enables post-training quantization of billion-parameter models to 4-bit precision with minimal accuracy degradation. AWQ [2] identifies that weight activation outliers disproportionately affect quantization quality, proposing activation-aware quantization that preserves performance at low bit-widths. Beyond quantization, structured pruning methods such as SparseGPT [3] remove structured components of weight matrices to reduce both storage and inference cost.\n\n**Hardware Acceleration for Neural Networks.** Custom silicon accelerators have been extensively studied for efficient inference. Eyeriss [4] introduced a spatial array architecture optimized for dataflow reuse, establishing design principles adapted for transformer-based models. DianNao [5] demonstrated that dedicated hardware for neural arithmetic achieves orders-of-magnitude improvements over general-purpose CPUs. More recent transformer-specific accelerators [6] address the unique attention and matrix-multiplication patterns that dominate LLM inference.\n\n**System-Level Optimization for Edge AI.** Always-on AI requires co-design across the full software-hardware stack. MCUNet [7] demonstrated that joint network and system design enables ImageNet-class inference on microcontrollers, validating the co-design philosophy for edge AI. For language models, speculative decoding [8] reduces latency using small draft models to approximate expensive autoregressive generation. Adaptive computation methods [9][10] dynamically adjust effort based on input complexity for energy-constrained environments.\n\n**Gaps and CLONE's Contribution.** While prior work advanced model compression [1][2][3], hardware design [4][5][6], and system optimization [7][8][9][10] independently, fewer efforts integrate these dimensions holistically for LLM inference on commodity edge platforms. CLONE addresses this gap through algorithm-hardware co-design that unifies real-time energy optimization with robust accuracy.\n\n---\n\n## References\n\n[1] Frantar, E., Ashkboos, S., Hoefler, T., & Alistarh, D. (2022). GPTQ: Accurate Post-Training Quantization for Generative Pre-trained Transformers. *arXiv:2210.17323*.\n\n[2] Lin, J., Tang, J., Tang, H., Yang, S., Dang, Q., & Han, S. (2024). AWQ: Activation-Aware Weight Quantization for LLM Compression and Acceleration. *arXiv:2306.00978*.\n\n[3] Frantar, E., & Alistarh, D. (2023). SparseGPT: Massive Generative Pre-trained Transformer Modeling with SparseGPT. *arXiv:2301.00774*.\n\n[4] Chen, Y.-H., Krishna, T., Emer, J. S., & Sze, V. (2017). Eyeriss: An Energy-Efficient Reconfigurable Accelerator for Deep Convolutional Neural Networks. *IEEE J. Solid-State Circuits*, 52(1).\n\n[5] Chen, T., Du, Z., Sun, N., Wang, J., Wu, C., Chen, Y., & Temam, O. (2014). DianNao: A Small-Footprint High-Throughput Accelerator for Ubiquitous Machine-Learning. *ASPLOS 2014*.\n\n[6] Ham, T. J., Lee, Y. J., Seo, S. H., Kim, S., Choi, G. Y., Lee, J. W., & Lee, J. H. (2020). A Hardware Accelerator for Efficient Transformers. *arXiv:2009.08630*.\n\n[7] Lin, J., Zhu, L., Chen, W.-M., Wang, W.-C., & Han, S. (2020). MCUNet: Tiny Deep Learning on IoT Devices. *NeurIPS 2020*.\n\n[8] Leviathan, Y., Kalman, M., & Matias, Y. (2023). Fast Inference from Transformers via Speculative Decoding. *arXiv:2211.17192*.\n\n[9] Liu, W., Zhou, P., Wang, Z., Zhao, Z., Wang, H., Deng, H., & Gao, P. (2020). FastBERT: A Self-Distilling BERT with Adaptive Inference Time. *ACL 2020*.\n\n[10] Schuster, T., Kalyan, A., & Adam, A. M. (2022). GLM-Shot: Few-Shot Learning with Hybrid Language Models. *arXiv:2204.06066*."
+      }
+    ],
+    "log_directory": ".massgen/massgen_logs/log_20260410_103321_469337",
+    "final_answer_path": ".massgen/massgen_logs/log_20260410_103321_469337/turn_1/attempt_1/final",
+    "usage": {
+      "prompt_tokens": 2153380,
+      "completion_tokens": 145070,
+      "total_tokens": 2298450
+    }
+  }
+}

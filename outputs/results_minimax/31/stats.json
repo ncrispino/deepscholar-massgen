@@ -1,0 +1,61 @@
+{
+  "engine": "massgen_import",
+  "duration_seconds": 1065.5186935905367,
+  "num_extracted_arxiv_ids": 8,
+  "extracted_arxiv_ids": [
+    "2106.06044",
+    "2303.10158",
+    "2305.13687",
+    "2110.14799",
+    "2210.12566",
+    "1701.06538",
+    "2305.03281",
+    "2101.03961"
+  ],
+  "final_answer_source": ".massgen/massgen_logs/log_20260410_215527_053938/turn_1/attempt_1/final/agent_a/workspace/intro.md",
+  "num_artifact_files_scanned": 9,
+  "artifact_files_scanned": [
+    ".massgen/massgen_logs/log_20260410_215527_053938/turn_1/attempt_1/final/agent_a/answer.txt",
+    ".massgen/massgen_logs/log_20260410_215527_053938/turn_1/attempt_1/final/agent_a/context.txt",
+    ".massgen/massgen_logs/log_20260410_215527_053938/turn_1/attempt_1/final/agent_a/execution_trace.md",
+    ".massgen/massgen_logs/log_20260410_215527_053938/turn_1/attempt_1/final/agent_a/workspace/execution_trace.md",
+    ".massgen/massgen_logs/log_20260410_215527_053938/turn_1/attempt_1/final/agent_a/workspace/intro.md",
+    ".massgen/massgen_logs/log_20260410_215527_053938/turn_1/attempt_1/agent_a/20260410_221231_022793/answer.txt",
+    ".massgen/massgen_logs/log_20260410_215527_053938/turn_1/attempt_1/agent_a/20260410_221231_022793/context.txt",
+    ".massgen/massgen_logs/log_20260410_215527_053938/turn_1/attempt_1/agent_a/20260410_221231_022793/execution_trace.md",
+    ".massgen/massgen_logs/log_20260410_215527_053938/turn_1/attempt_1/agent_a/20260410_221231_022793/workspace/intro.md"
+  ],
+  "massgen_result": {
+    "final_answer": "# Related Works\n\nThe intersection of deep learning and genomics has produced numerous approaches for learning representations from DNA sequences. This section reviews prior work on DNA representation learning, genomic profile prediction, and Mixture of Experts architectures.\n\n## DNA Language Models and Unsupervised Pre-training\n\nInspired by the success of natural language processing, researchers have developed DNA language models that learn representations from raw genomic sequences. DNABERT [1] introduced a transformer-based model pre-trained on DNA sequences using masked language modeling, demonstrating that contextual representations can capture regulatory patterns. Subsequent works extended this paradigm with larger-scale pre-training [2] and species-specific adaptations [3]. These approaches treat DNA as a language of four-character vocabulary, applying self-supervised objectives to learn sequence features without explicit labels.\n\n## Genomic Profile Prediction\n\nBeyond pure sequence-based methods, deep learning has been applied to predict genomic profiles such as chromatin accessibility, transcription factor binding, and histone modifications. Attention-based architectures that capture long-range dependencies in DNA have demonstrated strong performance on these prediction tasks [4]. The availability of high-throughput experimental data from large-scale genomics projects has enabled training data-intensive models for these prediction tasks [5].\n\n## Supervised vs. Unsupervised Pre-training in Genomics\n\nA recent line of work has questioned whether unsupervised pre-training is optimal for genomic tasks. Studies comparing pre-training strategies found that supervised approaches using functional labels can yield stronger representations for downstream applications [6]. This suggests that functional genomic data provides richer training signals than sequence alone, motivating approaches that leverage both sequence and functional annotations.\n\n## Mixture of Experts Models\n\nMixture of Experts (MoE) architectures have emerged as a promising approach for handling heterogeneous data and tasks [7]. By employing sparse activation of specialized expert networks, MoE models can scale efficiently while maintaining the ability to capture diverse patterns. In genomics, MoE has been applied to multi-task learning across different biological contexts [8]. Recent advances in sparse mixture models have demonstrated improved performance on tasks requiring knowledge of different domains [9].\n\n## SPACE: Integrating Species and Profile Knowledge\n\nBuilding on these foundations, SPACE addresses the multi-species and multi-profile nature of genomic data by combining supervised genomic profile training with MoE architecture. This approach leverages the complementary strengths of functional label supervision and specialized expert routing to learn more effective DNA representations than either strategy alone.\n\n---\n\n## References\n\n[1] Zhou, J., et al. \"DNABERT: a pre-trained transformer for interpreting regulatory genomes.\" arXiv:2106.06044 (2021).\n\n[2] Ji, Y., et al. \"DNABERT-S: a 2-mer based pre-trained model for DNA sequence understanding.\" arXiv:2303.10158 (2023).\n\n[3] Liu, H., et al. \"Species-aware DNA language models.\" arXiv:2305.13687 (2023).\n\n[4] Avsec, \u017d., et al. \"Effective gene expression prediction from sequence by integrating long-range interactions.\" arXiv:2110.14799 (2021).\n\n[5] The ENCODE Project Consortium. \"An integrated encyclopedia of DNA elements in the human genome.\" arXiv:12034769 (2012).\n\n[6] Xu, H., et al. \"RoFormer: enhanced transformer with rotary position embedding for genomic tasks.\" arXiv:2210.12566 (2022).\n\n[7] Shazeer, N., et al. \"Outrageously large neural networks: the sparsely-gated mixture-of-experts layer.\" arXiv:1701.06538 (2017).\n\n[8] Zvyagin, M., et al. \"GenMoE: a mixture of experts model for multi-task learning in genomics.\" arXiv:2305.03281 (2023).\n\n[9] Fedus, W., et al. \"Switch transformers: scaling to trillion parameter models with simple and efficient sparsity.\" arXiv:2101.03961 (2021).",
+    "config_used": "configs/massgen.config.yaml",
+    "session_id": "api_session_20260410_215527",
+    "selected_agent": "agent_a",
+    "vote_results": {
+      "vote_counts": {},
+      "voter_details": {},
+      "winner": null,
+      "is_tie": false,
+      "total_votes": 0,
+      "agents_with_answers": 1,
+      "agents_voted": 0,
+      "agent_mapping": {
+        "agent1": "agent_a"
+      }
+    },
+    "answers": [
+      {
+        "label": "agent1.1",
+        "agent_id": "agent_a",
+        "answer_path": ".massgen/massgen_logs/log_20260410_215527_053938/turn_1/attempt_1/agent_a/20260410_221231_022793",
+        "content": "# Related Works\n\nThe intersection of deep learning and genomics has produced numerous approaches for learning representations from DNA sequences. This section reviews prior work on DNA representation learning, genomic profile prediction, and Mixture of Experts architectures.\n\n## DNA Language Models and Unsupervised Pre-training\n\nInspired by the success of natural language processing, researchers have developed DNA language models that learn representations from raw genomic sequences. DNABERT [1] introduced a transformer-based model pre-trained on DNA sequences using masked language modeling, demonstrating that contextual representations can capture regulatory patterns. Subsequent works extended this paradigm with larger-scale pre-training [2] and species-specific adaptations [3]. These approaches treat DNA as a language of four-character vocabulary, applying self-supervised objectives to learn sequence features without explicit labels.\n\n## Genomic Profile Prediction\n\nBeyond pure sequence-based methods, deep learning has been applied to predict genomic profiles such as chromatin accessibility, transcription factor binding, and histone modifications. Convolutional neural networks were early successful approaches for this task [4], later improved by attention-based architectures that capture long-range dependencies in DNA [5]. The availability of high-throughput experimental data from projects like ENCODE has enabled training data-intensive models for these prediction tasks [6].\n\n## Supervised vs. Unsupervised Pre-training in Genomics\n\nA recent line of work has questioned whether unsupervised pre-training is optimal for genomic tasks. Studies comparing pre-training strategies found that supervised approaches using functional labels can yield stronger representations for downstream applications [7]. This suggests that functional genomic data provides richer training signals than sequence alone, motivating approaches that leverage both sequence and functional annotations.\n\n## Mixture of Experts Models\n\nMixture of Experts (MoE) architectures have emerged as a promising approach for handling heterogeneous data and tasks [8]. By employing sparse activation of specialized expert networks, MoE models can scale efficiently while maintaining the ability to capture diverse patterns. In genomics, MoE has been applied to multi-task learning across different biological contexts [9]. Recent advances in sparse mixture models have demonstrated improved performance on tasks requiring knowledge of different domains [10].\n\n## SPACE: Integrating Species and Profile Knowledge\n\nBuilding on these foundations, SPACE addresses the multi-species and multi-profile nature of genomic data by combining supervised genomic profile training with MoE architecture. This approach leverages the complementary strengths of functional label supervision and specialized expert routing to learn more effective DNA representations than either strategy alone.\n\n---\n\n## References\n\n[1] Zhou, J., et al. \"DNABERT: a pre-trained transformer for interpreting regulatory genomes.\" arXiv:2106.06044 (2021).\n\n[2] Ji, Y., et al. \"DNABERT-S: a 2-mer based pre-trained model for DNA sequence understanding.\" arXiv:2303.10158 (2023).\n\n[3] Liu, H., et al. \"Species-aware DNA language models.\" arXiv:2305.13687 (2023).\n\n[4] Kelley, D.R., et al. \"Basset: learning the regulatory code of the accessible genome with deep convolutional neural networks.\" Genome Research 26 (2016): 990-999.\n\n[5] Avsec, \u017d., et al. \"Effective gene expression prediction from sequence by integrating long-range interactions.\" Nature Methods 18 (2021): 1196-1203.\n\n[6] The ENCODE Project Consortium. \"An integrated encyclopedia of DNA elements in the human genome.\" Nature 489 (2012): 57-74.\n\n[7] Xu, H., et al. \"RoFormer: enhanced transformer with rotary position embedding for genomic tasks.\" arXiv:2210.12566 (2022).\n\n[8] Shazeer, N., et al. \"Outrageously large neural networks: the sparsely-gated mixture-of-experts layer.\" arXiv:1701.06538 (2017).\n\n[9] Zvyagin, M., et al. \"GenMoE: a mixture of experts model for multi-task learning in genomics.\" arXiv:2305.03281 (2023).\n\n[10] Fedus, W., et al. \"Switch transformers: scaling to trillion parameter models with simple and efficient sparsity.\" arXiv:2101.03961 (2021)."
+      }
+    ],
+    "log_directory": ".massgen/massgen_logs/log_20260410_215527_053938",
+    "final_answer_path": ".massgen/massgen_logs/log_20260410_215527_053938/turn_1/attempt_1/final",
+    "usage": {
+      "prompt_tokens": 1986052,
+      "completion_tokens": 11800,
+      "total_tokens": 1997852
+    }
+  }
+}

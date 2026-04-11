@@ -201,3 +201,6 @@ data_pipeline/outputs/
 
 # Me
 .massgen/
+*.sw*
+snapshots/
+temp_workspaces
